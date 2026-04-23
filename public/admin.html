@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HANDS Logistics — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/brand.css" />
+<style>
+  /* Login gate */
+  .login-wrap {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 48px 24px;
+  }
+  .login-card {
+    background: var(--white);
+    padding: 48px; max-width: 440px; width: 100%;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.12);
+    border-left: 2px solid var(--green);
+  }
+  .login-card .section-title { font-size: 28px; }
+  .login-card .field { margin-bottom: 24px; }
+
+  /* Tabs */
+  .admin-tabs {
+    display: flex; gap: 0;
+    border-bottom: 1px solid var(--light-grey);
+    margin-bottom: 32px;
+  }
+  .admin-tab {
+    background: transparent; border: none; cursor: pointer;
+    padding: 18px 28px;
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-grey);
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .admin-tab.active { color: var(--dark); border-bottom-color: var(--green-dark); }
+  .admin-tab:hover { color: var(--dark); }
+
+  .admin-panel { display: none; }
+  .admin-panel.active { display: block; }
+
+  /* Line item builders */
+  .builder-card { background: var(--white); padding: 0; box-shadow: 0 2px 20px rgba(0,0,0,0.12); margin-bottom: 24px; }
+  .builder-header {
+    padding: 20px 28px; border-bottom: 1px solid var(--light-grey);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .builder-header h4 {
+    font-family: var(--font-display); font-size: 20px; font-weight: 400;
+  }
+  .add-bar {
+    padding: 16px 28px; background: var(--off-white);
+    display: grid; grid-template-columns: 2fr 1fr auto; gap: 12px;
+    align-items: end; border-bottom: 1px solid var(--light-grey);
+  }
+  .add-bar .field { margin-bottom: 0; }
+  .add-bar .field label { font-size: 9px; }
+  .add-bar select, .add-bar input {
+    font-family: var(--font-body); font-size: 13px;
+    padding: 8px 10px; border: 1px solid var(--light-grey);
+    background: var(--white); border-radius: 2px; outline: none;
+  }
+  .add-bar button {
+    padding: 10px 20px; font-size: 11px;
+  }
+  .items-list { padding: 4px 0; min-height: 60px; }
+  .empty-state {
+    padding: 24px 28px; text-align: center; color: var(--text-grey);
+    font-size: 12px; font-style: italic;
+  }
+  .item-row {
+    display: grid; grid-template-columns: 1fr auto auto auto;
+    align-items: center; gap: 14px;
+    padding: 12px 28px;
+    border-bottom: 1px solid var(--light-grey);
+  }
+  .item-row:last-child { border-bottom: none; }
+  .item-info .name { font-size: 13px; font-weight: 500; }
+  .item-info .meta {
+    font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.08em;
+    color: var(--text-grey); margin-top: 2px; text-transform: uppercase;
+  }
+  .item-qty input {
+    width: 56px; text-align: center;
+    font-family: var(--font-mono); font-size: 12px;
+    padding: 4px 6px; border: 1px solid var(--light-grey); border-radius: 2px;
+  }
+  .item-line {
+    font-family: var(--font-mono); font-size: 13px; font-weight: 500;
+    min-width: 80px; text-align: right;
+  }
+  .item-remove {
+    background: transparent; border: none; cursor: pointer;
+    color: var(--mid-grey); font-size: 16px; padding: 2px 6px;
+  }
+  .item-remove:hover { color: var(--red); }
+
+  /* Totals */
+  .totals-card {
+    background: var(--dark); color: var(--white);
+    padding: 28px 32px; margin-bottom: 24px;
+  }
+  .totals-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 13px;
+  }
+  .totals-row:last-child { border-bottom: none; padding-top: 16px; }
+  .totals-row .label { color: rgba(255,255,255,0.7); }
+  .totals-row .amt { font-family: var(--font-mono); }
+  .totals-grand {
+    border-top: 2px solid var(--green) !important;
+    padding-top: 16px !important;
+    margin-top: 8px;
+  }
+  .totals-grand .label {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--green);
+  }
+  .totals-grand .amt {
+    font-family: var(--font-display); font-size: 32px; font-weight: 300;
+    color: var(--white);
+  }
+
+  /* Proposal list */
+  .proposal-list { display: flex; flex-direction: column; gap: 2px; }
+  .proposal-card {
+    background: var(--white);
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    gap: 20px;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    transition: background 0.2s;
+  }
+  .proposal-card:hover { background: var(--off-white); }
+  .proposal-name {
+    font-family: var(--font-display); font-size: 20px; font-weight: 400;
+  }
+  .proposal-meta {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
+    color: var(--text-grey); text-transform: uppercase; margin-top: 4px;
+  }
+  .proposal-status {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 6px 12px; border-radius: 2px;
+  }
+  .status-sent { background: rgba(160,214,180,0.2); color: var(--green-dark); }
+  .status-accepted { background: var(--green); color: var(--dark); }
+  .status-changes_requested { background: rgba(201,74,74,0.15); color: var(--red); }
+  .proposal-link {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--text-grey); text-decoration: none;
+  }
+  .proposal-link:hover { color: var(--green-dark); }
+
+  /* Banner for new slug */
+  .link-banner {
+    background: rgba(160,214,180,0.15);
+    border-left: 2px solid var(--green);
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    display: none;
+  }
+  .link-banner.show { display: block; }
+  .link-banner .lb-eyebrow {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--green-dark);
+    margin-bottom: 6px;
+  }
+  .link-banner .lb-url {
+    font-family: var(--font-mono); font-size: 13px; font-weight: 500;
+    word-break: break-all; color: var(--dark);
+    padding: 10px; background: var(--white);
+    border: 1px solid var(--light-grey); border-radius: 2px;
+    margin-top: 8px;
+  }
+  .link-banner .lb-actions {
+    display: flex; gap: 12px; margin-top: 14px;
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN GATE -->
+<div id="loginGate" class="login-wrap">
+  <div class="login-card">
+    <div class="section-eyebrow">HANDS Admin</div>
+    <h2 class="section-title">Enter password</h2>
+    <p class="section-sub">Protected workspace for proposal management.</p>
+    <div class="field">
+      <label for="passwordInput">Password</label>
+      <input type="password" id="passwordInput" placeholder="••••••••" autocomplete="off" />
+    </div>
+    <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="login()">Enter</button>
+  </div>
+</div>
+
+<!-- MAIN ADMIN (hidden until login) -->
+<div id="adminMain" style="display: none;">
+
+  <nav>
+    <div class="nav-brand">
+      <img src="https://res.cloudinary.com/dxkpbjicu/image/upload/v1774556178/HANDS_Logo_BlackBG_HiRes_qtkac8.png" alt="HANDS Logistics" />
+      <div class="divider"></div>
+      <span class="sub">Admin</span>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-link" onclick="logout()">Log out</button>
+    </div>
+  </nav>
+
+  <main>
+    <div class="admin-tabs">
+      <button class="admin-tab active" data-panel="create" onclick="switchTab('create')">New Proposal</button>
+      <button class="admin-tab" data-panel="list" onclick="switchTab('list')">All Proposals</button>
+    </div>
+
+    <!-- NEW PROPOSAL -->
+    <div id="panel-create" class="admin-panel active">
+
+      <div class="link-banner" id="linkBanner">
+        <div class="lb-eyebrow">Proposal Created</div>
+        <div style="font-size: 14px; margin-top: 4px;">Share this link with your client:</div>
+        <div class="lb-url" id="lbUrl"></div>
+        <div class="lb-actions">
+          <button class="btn-secondary" onclick="copyLink()">Copy Link</button>
+          <button class="btn-primary" onclick="emailProposal()">Email to Client</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-eyebrow">Step 01 — Client</div>
+        <h3 class="section-title" style="font-size: 22px;">Who is this proposal for?</h3>
+        <div class="field-grid" style="margin-top: 20px;">
+          <div class="field">
+            <label for="clientName">Company</label>
+            <input id="clientName" type="text" placeholder="e.g. Tito's Vodka" />
+          </div>
+          <div class="field">
+            <label for="clientContact">Contact Name</label>
+            <input id="clientContact" type="text" placeholder="e.g. Sarah Lane" />
+          </div>
+          <div class="field">
+            <label for="clientEmail">Contact Email</label>
+            <input id="clientEmail" type="email" placeholder="name@company.com" />
+          </div>
+          <div class="field">
+            <label for="proposalDate">Proposal Date</label>
+            <input id="proposalDate" type="date" />
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-eyebrow">Step 02 — Onboarding Intro</div>
+        <h3 class="section-title" style="font-size: 22px;">Personalize the opening</h3>
+        <p class="section-sub">Leave blank to use the default template. This appears at the top of their proposal page.</p>
+        <div class="field">
+          <label for="onboardingIntro">Custom intro for this client (optional)</label>
+          <textarea id="onboardingIntro" rows="4" placeholder="Thank you for considering HANDS Logistics — we'd love to be the team behind Tito's operations here in Las Vegas..."></textarea>
+        </div>
+      </div>
+
+      <!-- STORAGE -->
+      <div class="builder-card">
+        <div class="builder-header">
+          <div>
+            <div class="section-eyebrow">Step 03 — Storage</div>
+            <h4>Pre-fill storage package</h4>
+          </div>
+        </div>
+        <div class="add-bar">
+          <div class="field">
+            <label for="storageType">Storage Type</label>
+            <select id="storageType"></select>
+          </div>
+          <div class="field">
+            <label><span id="storageQtyLabel">Quantity</span></label>
+            <input id="storageQty" type="number" min="1" step="1" value="1" />
+          </div>
+          <button class="btn-primary" onclick="addStorageItem()">Add +</button>
+        </div>
+        <div class="items-list" id="storageList">
+          <div class="empty-state">Optional — skip if this proposal doesn't include storage.</div>
+        </div>
+      </div>
+
+      <!-- DELIVERY -->
+      <div class="builder-card">
+        <div class="builder-header">
+          <div>
+            <div class="section-eyebrow">Step 04 — Delivery</div>
+            <h4>Pre-fill delivery package</h4>
+          </div>
+        </div>
+        <div class="add-bar">
+          <div class="field">
+            <label for="deliveryType">Delivery Type</label>
+            <select id="deliveryType"></select>
+          </div>
+          <div class="field">
+            <label><span id="deliveryQtyLabel">Quantity</span></label>
+            <input id="deliveryQty" type="number" min="1" step="1" value="1" />
+          </div>
+          <button class="btn-primary" onclick="addDeliveryItem()">Add +</button>
+        </div>
+        <div class="items-list" id="deliveryList">
+          <div class="empty-state">Optional — skip if this proposal doesn't include delivery.</div>
+        </div>
+      </div>
+
+      <!-- CUSTOM NOTES -->
+      <div class="card">
+        <div class="section-eyebrow">Step 05 — Notes</div>
+        <h3 class="section-title" style="font-size: 22px;">Anything client-specific?</h3>
+        <div class="field" style="margin-top: 16px;">
+          <label for="customNotes">Custom terms, arrangements, context</label>
+          <textarea id="customNotes" rows="3" placeholder="e.g. Access weekdays 8am-5pm. Event kit needs to ship to Austin by May 12."></textarea>
+        </div>
+      </div>
+
+      <!-- TOTALS -->
+      <div class="totals-card">
+        <div class="totals-row">
+          <span class="label">Storage (monthly)</span>
+          <span class="amt" id="totStorageMonthly">$0</span>
+        </div>
+        <div class="totals-row">
+          <span class="label">Storage (short-term, 1wk min)</span>
+          <span class="amt" id="totStorageShort">$0</span>
+        </div>
+        <div class="totals-row">
+          <span class="label">Delivery</span>
+          <span class="amt" id="totDelivery">$0</span>
+        </div>
+        <div class="totals-row totals-grand">
+          <span class="label">Quarterly Invoice</span>
+          <span class="amt" id="totQuarterly">$0</span>
+        </div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+        <button class="btn-primary" onclick="saveProposal()">Generate Proposal</button>
+        <button class="btn-secondary" onclick="resetForm()">Clear Form</button>
+      </div>
+    </div>
+
+    <!-- ALL PROPOSALS -->
+    <div id="panel-list" class="admin-panel">
+      <div class="section-eyebrow">Dashboard</div>
+      <h2 class="section-title">All Proposals</h2>
+      <p class="section-sub">Every proposal you've generated, most recent first.</p>
+      <div class="proposal-list" id="proposalList">
+        <div class="empty-state">Loading…</div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="https://res.cloudinary.com/dxkpbjicu/image/upload/v1774556178/HANDS_Logo_BlackBG_HiRes_qtkac8.png" alt="HANDS Logistics" />
+      </div>
+      <div class="footer-meta">Admin · handslogistics.netlify.app</div>
+    </div>
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/rates.js"></script>
+<script>
+  // ── STATE ──
+  let adminPassword = null;
+  let currentSlug = null;
+  let currentClientEmail = "";
+  let storageItems = [];
+  let deliveryItems = [];
+
+  // ── LOGIN ──
+  document.getElementById("passwordInput").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") login();
+  });
+
+  async function login() {
+    const pw = document.getElementById("passwordInput").value;
+    if (!pw) return;
+    // Test password with a list call
+    try {
+      const res = await fetch("/.netlify/functions/proposals", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "list", password: pw })
+      });
+      if (res.status === 401) { showToast("Wrong password", true); return; }
+      if (!res.ok) { showToast("Login error — check network", true); return; }
+      adminPassword = pw;
+      sessionStorage.setItem("hands_admin_pw", pw);
+      document.getElementById("loginGate").style.display = "none";
+      document.getElementById("adminMain").style.display = "block";
+      initAdmin();
+    } catch (err) {
+      showToast("Connection error", true);
+    }
+  }
+
+  function logout() {
+    sessionStorage.removeItem("hands_admin_pw");
+    adminPassword = null;
+    location.reload();
+  }
+
+  function initAdmin() {
+    // Date default
+    document.getElementById("proposalDate").value = new Date().toISOString().split("T")[0];
+    // Populate rate dropdowns
+    populateStorageDropdown();
+    populateDeliveryDropdown();
+    loadProposalList();
+  }
+
+  // Restore session password if reloaded
+  window.addEventListener("load", () => {
+    const saved = sessionStorage.getItem("hands_admin_pw");
+    if (saved) {
+      document.getElementById("passwordInput").value = saved;
+      login();
+    }
+  });
+
+  // ── TABS ──
+  function switchTab(panel) {
+    document.querySelectorAll(".admin-tab").forEach(t => t.classList.remove("active"));
+    document.querySelector(`.admin-tab[data-panel="${panel}"]`).classList.add("active");
+    document.querySelectorAll(".admin-panel").forEach(p => p.classList.remove("active"));
+    document.getElementById("panel-" + panel).classList.add("active");
+    if (panel === "list") loadProposalList();
+  }
+
+  // ── STORAGE DROPDOWN ──
+  function populateStorageDropdown() {
+    const select = document.getElementById("storageType");
+    select.innerHTML = `
+      <optgroup label="Rack Storage">
+        <option value="bay">Full Bay — 12 pallets ($460/mo)</option>
+        <option value="pallet">Standard Pallet ($45/mo)</option>
+        <option value="overstock">Overstock Pallet ($35/mo)</option>
+      </optgroup>
+      <optgroup label="Bulk Floor">
+        <option value="bulk_std">Standard Bulk ($10/sqft/mo)</option>
+        <option value="bulk_prem">Oversize/Irregular ($12/sqft/mo)</option>
+      </optgroup>
+      <optgroup label="Short-term (1wk min)">
+        <option value="st_pallet">Short-term Pallet ($35/pallet/wk)</option>
+        <option value="st_bulk">Short-term Bulk ($3.50/sqft/wk)</option>
+      </optgroup>`;
+    select.addEventListener("change", updateStorageQtyLabel);
+    updateStorageQtyLabel();
+  }
+  function updateStorageQtyLabel() {
+    const t = document.getElementById("storageType").value;
+    document.getElementById("storageQtyLabel").textContent = STORAGE_RATES[t].qtyLabel;
+  }
+
+  function populateDeliveryDropdown() {
+    const select = document.getElementById("deliveryType");
+    let html = '<optgroup label="Tiers">';
+    Object.entries(DELIVERY_RATES).filter(([k,v]) => v.type === "tier").forEach(([k,v]) => {
+      html += `<option value="${k}">${v.name} ($${v.price})</option>`;
+    });
+    html += '</optgroup><optgroup label="Add-Ons">';
+    Object.entries(DELIVERY_RATES).filter(([k,v]) => v.type === "addon").forEach(([k,v]) => {
+      html += `<option value="${k}">${v.name} ($${v.price}${v.unit === "flat" ? " flat" : "/" + v.unit})</option>`;
+    });
+    html += '</optgroup><optgroup label="Surcharges">';
+    Object.entries(DELIVERY_RATES).filter(([k,v]) => v.type === "surcharge").forEach(([k,v]) => {
+      const price = v.percent ? `+${v.percent}%` : `$${v.price}${v.unit === "flat" ? "" : "/" + v.unit}`;
+      html += `<option value="${k}">${v.name} (${price})</option>`;
+    });
+    html += '</optgroup>';
+    select.innerHTML = html;
+  }
+
+  // ── STORAGE ITEM MANAGEMENT ──
+  function addStorageItem() {
+    const type = document.getElementById("storageType").value;
+    const qty = parseFloat(document.getElementById("storageQty").value);
+    if (!qty || qty <= 0) { showToast("Enter valid quantity", true); return; }
+    storageItems.push({ id: Date.now() + Math.random(), type, qty });
+    document.getElementById("storageQty").value = 1;
+    renderStorage();
+    renderTotals();
+  }
+  function removeStorageItem(id) {
+    storageItems = storageItems.filter(i => i.id !== id);
+    renderStorage(); renderTotals();
+  }
+  function updateStorageQty(id, qty) {
+    const q = parseFloat(qty);
+    if (!q || q <= 0) return;
+    const item = storageItems.find(i => i.id === id);
+    if (item) { item.qty = q; renderStorage(); renderTotals(); }
+  }
+  function renderStorage() {
+    const list = document.getElementById("storageList");
+    if (storageItems.length === 0) {
+      list.innerHTML = '<div class="empty-state">Optional — skip if this proposal doesn\'t include storage.</div>';
+      return;
+    }
+    list.innerHTML = storageItems.map(it => {
+      const rate = STORAGE_RATES[it.type];
+      const line = it.qty * rate.price;
+      return `
+        <div class="item-row">
+          <div class="item-info">
+            <div class="name">${rate.name}</div>
+            <div class="meta">${fmt(rate.price)}/${rate.unitShort}</div>
+          </div>
+          <div class="item-qty"><input type="number" min="1" value="${it.qty}" onchange="updateStorageQty(${it.id}, this.value)" /></div>
+          <div class="item-line">${fmt(line)}</div>
+          <button class="item-remove" onclick="removeStorageItem(${it.id})">&times;</button>
+        </div>`;
+    }).join("");
+  }
+
+  // ── DELIVERY ITEM MANAGEMENT ──
+  function addDeliveryItem() {
+    const type = document.getElementById("deliveryType").value;
+    const qty = parseFloat(document.getElementById("deliveryQty").value);
+    if (!qty || qty <= 0) { showToast("Enter valid quantity", true); return; }
+    deliveryItems.push({ id: Date.now() + Math.random(), type, qty });
+    document.getElementById("deliveryQty").value = 1;
+    renderDelivery();
+    renderTotals();
+  }
+  function removeDeliveryItem(id) {
+    deliveryItems = deliveryItems.filter(i => i.id !== id);
+    renderDelivery(); renderTotals();
+  }
+  function updateDeliveryQty(id, qty) {
+    const q = parseFloat(qty);
+    if (!q || q <= 0) return;
+    const item = deliveryItems.find(i => i.id === id);
+    if (item) { item.qty = q; renderDelivery(); renderTotals(); }
+  }
+  function renderDelivery() {
+    const list = document.getElementById("deliveryList");
+    if (deliveryItems.length === 0) {
+      list.innerHTML = '<div class="empty-state">Optional — skip if this proposal doesn\'t include delivery.</div>';
+      return;
+    }
+    list.innerHTML = deliveryItems.map(it => {
+      const rate = DELIVERY_RATES[it.type];
+      const line = calcDeliveryLine(it, deliveryItems);
+      const displayPrice = rate.percent ? `+${rate.percent}%` : `${fmt(rate.price)}${rate.unit === "flat" ? " flat" : "/" + (rate.unit || rate.unitShort || "each")}`;
+      return `
+        <div class="item-row">
+          <div class="item-info">
+            <div class="name">${rate.name}</div>
+            <div class="meta">${displayPrice}</div>
+          </div>
+          <div class="item-qty"><input type="number" min="1" value="${it.qty}" onchange="updateDeliveryQty(${it.id}, this.value)" /></div>
+          <div class="item-line">${fmt(line)}</div>
+          <button class="item-remove" onclick="removeDeliveryItem(${it.id})">&times;</button>
+        </div>`;
+    }).join("");
+  }
+
+  // ── TOTALS ──
+  function renderTotals() {
+    const s = calcStorageTotals(storageItems);
+    const d = calcDeliveryTotal(deliveryItems);
+    document.getElementById("totStorageMonthly").textContent = fmt(s.monthly);
+    document.getElementById("totStorageShort").textContent = fmt(s.shortTerm);
+    document.getElementById("totDelivery").textContent = fmt(d);
+    const quarterly = (s.monthly * 3) + s.shortTerm + d;
+    document.getElementById("totQuarterly").textContent = fmt(quarterly);
+  }
+
+  // ── SAVE PROPOSAL ──
+  async function saveProposal() {
+    const client = document.getElementById("clientName").value.trim();
+    if (!client) { showToast("Client name required", true); return; }
+    if (storageItems.length === 0 && deliveryItems.length === 0) {
+      if (!confirm("No line items added. Generate empty proposal?")) return;
+    }
+
+    const proposal = {
+      slug: currentSlug || null, // null = new, otherwise update existing
+      client,
+      contact: document.getElementById("clientContact").value.trim(),
+      email: document.getElementById("clientEmail").value.trim(),
+      date: document.getElementById("proposalDate").value,
+      onboardingIntro: document.getElementById("onboardingIntro").value.trim(),
+      storageItems,
+      deliveryItems,
+      customNotes: document.getElementById("customNotes").value.trim()
+    };
+
+    try {
+      const res = await fetch("/.netlify/functions/proposals", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "save", password: adminPassword, proposal })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Save failed");
+
+      currentSlug = data.slug;
+      currentClientEmail = proposal.email;
+      const url = `${location.origin}/proposal/${data.slug}`;
+      document.getElementById("lbUrl").textContent = url;
+      document.getElementById("linkBanner").classList.add("show");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      showToast("Proposal saved");
+    } catch (err) {
+      showToast("Save failed: " + err.message, true);
+    }
+  }
+
+  function copyLink() {
+    const url = document.getElementById("lbUrl").textContent;
+    navigator.clipboard.writeText(url).then(
+      () => showToast("Link copied"),
+      () => showToast("Copy failed", true)
+    );
+  }
+
+  async function emailProposal() {
+    if (!currentSlug || !currentClientEmail) {
+      showToast("No client email on file", true);
+      return;
+    }
+    const url = `${location.origin}/proposal/${currentSlug}`;
+    const client = document.getElementById("clientName").value.trim();
+    const contact = document.getElementById("clientContact").value.trim();
+    const firstName = contact ? contact.split(" ")[0] : "";
+    const greeting = firstName ? `Hi ${firstName},` : "Hello,";
+
+    const body = `${greeting}\n\nThank you for considering HANDS Logistics. I've prepared a custom proposal for ${client}, ready to review here:\n\n${url}\n\nThis page shows exactly what working together would look like, with pricing tailored to your needs. You can review the details, adjust anything, and either accept or request changes directly from the page.\n\nHappy to walk through any of it on a call — just reply and we'll set a time.\n\nBest,\nJon\nFounder & CEO, HANDS Logistics\nLas Vegas, NV  |  concierge@handslogistics.com`;
+
+    const subject = `Your HANDS Logistics Proposal — ${client}`;
+
+    try {
+      const res = await fetch("/.netlify/functions/send-quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: adminPassword, to: currentClientEmail, subject, body })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Send failed");
+      showToast(`Sent to ${currentClientEmail}`);
+    } catch (err) {
+      showToast("Send failed: " + err.message, true);
+    }
+  }
+
+  // ── PROPOSAL LIST ──
+  async function loadProposalList() {
+    const listEl = document.getElementById("proposalList");
+    listEl.innerHTML = '<div class="empty-state">Loading…</div>';
+    try {
+      const res = await fetch("/.netlify/functions/proposals", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "list", password: adminPassword })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      if (data.proposals.length === 0) {
+        listEl.innerHTML = '<div class="empty-state">No proposals yet. Create one above.</div>';
+        return;
+      }
+
+      listEl.innerHTML = data.proposals.map(p => {
+        const date = p.updatedAt ? new Date(p.updatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "";
+        const statusLabel = (p.status || "sent").replace("_", " ");
+        return `
+          <div class="proposal-card">
+            <div>
+              <div class="proposal-name">${escapeHtml(p.client)}</div>
+              <div class="proposal-meta">${escapeHtml(p.contact || "—")} · ${date}</div>
+            </div>
+            <div class="proposal-status status-${p.status || "sent"}">${statusLabel}</div>
+            <a class="proposal-link" href="/proposal/${p.slug}" target="_blank">${p.slug} →</a>
+            <button class="btn-ghost" onclick="editProposal('${p.slug}')">Edit</button>
+          </div>`;
+      }).join("");
+    } catch (err) {
+      listEl.innerHTML = `<div class="empty-state">Error loading: ${escapeHtml(err.message)}</div>`;
+    }
+  }
+
+  async function editProposal(slug) {
+    try {
+      const res = await fetch("/.netlify/functions/proposals", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "load", slug })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      const p = data.proposal;
+      currentSlug = p.slug;
+      currentClientEmail = p.email || "";
+      document.getElementById("clientName").value = p.client || "";
+      document.getElementById("clientContact").value = p.contact || "";
+      document.getElementById("clientEmail").value = p.email || "";
+      document.getElementById("proposalDate").value = p.date || new Date().toISOString().split("T")[0];
+      document.getElementById("onboardingIntro").value = p.onboardingIntro || "";
+      document.getElementById("customNotes").value = p.customNotes || "";
+      storageItems = (p.storageItems || []).map(it => ({ ...it, id: it.id || Date.now() + Math.random() }));
+      deliveryItems = (p.deliveryItems || []).map(it => ({ ...it, id: it.id || Date.now() + Math.random() }));
+      renderStorage(); renderDelivery(); renderTotals();
+      switchTab("create");
+
+      const url = `${location.origin}/proposal/${p.slug}`;
+      document.getElementById("lbUrl").textContent = url;
+      document.getElementById("linkBanner").classList.add("show");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (err) {
+      showToast("Load failed: " + err.message, true);
+    }
+  }
+
+  // ── RESET ──
+  function resetForm() {
+    if (!confirm("Clear the form? This won't delete saved proposals.")) return;
+    currentSlug = null;
+    currentClientEmail = "";
+    ["clientName","clientContact","clientEmail","onboardingIntro","customNotes"].forEach(id => document.getElementById(id).value = "");
+    document.getElementById("proposalDate").value = new Date().toISOString().split("T")[0];
+    storageItems = [];
+    deliveryItems = [];
+    renderStorage(); renderDelivery(); renderTotals();
+    document.getElementById("linkBanner").classList.remove("show");
+    showToast("Form reset");
+  }
+
+  // ── UTILITIES ──
+  let toastTimer;
+  function showToast(msg, isError = false) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.toggle("error", isError);
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove("show"), 3000);
+  }
+  function escapeHtml(str) {
+    return String(str || "")
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  }
+</script>
+</body>
+</html>
