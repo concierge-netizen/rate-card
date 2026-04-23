@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HANDS Logistics — Your Proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/brand.css" />
+<style>
+  /* Loading state */
+  .loading-state {
+    min-height: 60vh;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 12px;
+    color: var(--text-grey);
+  }
+  .loading-state .spinner {
+    width: 24px; height: 24px;
+    border: 2px solid var(--light-grey);
+    border-top-color: var(--green-dark);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Prepared-for banner */
+  .prepared-banner {
+    background: var(--green); padding: 24px 48px;
+    text-align: center;
+  }
+  .prepared-eyebrow {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--dark);
+    opacity: 0.6; margin-bottom: 4px;
+  }
+  .prepared-name {
+    font-family: var(--font-display); font-size: 28px; font-weight: 400;
+    font-style: italic; color: var(--dark);
+  }
+
+  /* Onboarding section — the "hook" */
+  .onboarding-section { padding: 96px 80px; background: var(--off-white); }
+  .onboarding-inner { max-width: 860px; margin: 0 auto; }
+  .onboarding-intro {
+    font-family: var(--font-display); font-size: 26px; font-weight: 300;
+    line-height: 1.5; color: var(--dark);
+    margin-bottom: 48px;
+  }
+  .service-block {
+    padding: 28px 0;
+    border-top: 1px solid var(--light-grey);
+    display: grid; grid-template-columns: 120px 1fr; gap: 32px;
+    align-items: start;
+  }
+  .service-block:last-child { border-bottom: 1px solid var(--light-grey); }
+  .service-num {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--green-dark);
+    padding-top: 6px;
+  }
+  .service-title {
+    font-family: var(--font-display); font-size: 24px; font-weight: 400;
+    margin-bottom: 10px;
+  }
+  .service-desc {
+    font-size: 15px; font-weight: 300; color: var(--text-grey);
+    line-height: 1.75; margin-bottom: 10px;
+  }
+  .service-link {
+    font-family: var(--font-mono); font-size: 12px;
+    color: var(--green-dark); text-decoration: none;
+    letter-spacing: 0.05em; word-break: break-all;
+  }
+  .service-link:hover { text-decoration: underline; }
+
+  /* Package section */
+  .package-section { padding: 96px 80px; background: var(--white); }
+  .package-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 56px; align-items: start; }
+  .package-builders { display: flex; flex-direction: column; gap: 32px; }
+
+  .pkg-card {
+    background: var(--white);
+    border: 1px solid var(--light-grey);
+    overflow: hidden;
+  }
+  .pkg-header {
+    padding: 22px 28px; border-bottom: 1px solid var(--light-grey);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .pkg-header h3 {
+    font-family: var(--font-display); font-size: 22px; font-weight: 400;
+  }
+  .pkg-header .hint {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
+    color: var(--text-grey); text-transform: uppercase;
+  }
+
+  .add-bar {
+    padding: 18px 28px; background: var(--off-white);
+    display: grid; grid-template-columns: 2fr 1fr auto; gap: 12px;
+    align-items: end; border-bottom: 1px solid var(--light-grey);
+  }
+  .add-bar .field { margin-bottom: 0; }
+  .add-bar .field label { font-size: 9px; }
+  .add-bar select, .add-bar input {
+    font-family: var(--font-body); font-size: 13px;
+    padding: 8px 10px; border: 1px solid var(--light-grey);
+    background: var(--white); border-radius: 2px; outline: none;
+  }
+  .add-bar button { padding: 10px 20px; font-size: 11px; }
+
+  .items-list { padding: 4px 0; min-height: 40px; }
+  .empty-state {
+    padding: 24px 28px; text-align: center; color: var(--text-grey);
+    font-size: 12px; font-style: italic;
+  }
+  .item-row {
+    display: grid; grid-template-columns: 1fr auto auto auto;
+    align-items: center; gap: 14px;
+    padding: 14px 28px;
+    border-bottom: 1px solid var(--light-grey);
+  }
+  .item-row:last-child { border-bottom: none; }
+  .item-info .name { font-size: 14px; font-weight: 500; }
+  .item-info .meta {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em;
+    color: var(--text-grey); margin-top: 2px; text-transform: uppercase;
+  }
+  .item-qty input {
+    width: 60px; text-align: center;
+    font-family: var(--font-mono); font-size: 13px;
+    padding: 5px 8px; border: 1px solid var(--light-grey); border-radius: 2px;
+  }
+  .item-line {
+    font-family: var(--font-mono); font-size: 14px; font-weight: 500;
+    min-width: 84px; text-align: right;
+  }
+  .item-remove {
+    background: transparent; border: none; cursor: pointer;
+    color: var(--mid-grey); font-size: 18px; padding: 2px 6px;
+  }
+  .item-remove:hover { color: var(--red); }
+
+  /* Summary sidebar */
+  .summary-wrap { position: sticky; top: 96px; }
+  .summary {
+    background: var(--dark); color: var(--white);
+    padding: 36px 32px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  }
+  .summary-eyebrow {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--green); margin-bottom: 10px;
+  }
+  .summary-title {
+    font-family: var(--font-display); font-size: 26px; font-weight: 300;
+    line-height: 1.15; margin-bottom: 24px;
+  }
+  .summary-title em { font-style: italic; color: var(--green); }
+  .summary-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 13px;
+  }
+  .summary-row:first-child { border-top: 1px solid rgba(255,255,255,0.12); }
+  .summary-row .label { color: rgba(255,255,255,0.7); }
+  .summary-row .amt { font-family: var(--font-mono); }
+  .summary-grand {
+    padding-top: 18px; margin-top: 8px;
+    border-top: 1px solid rgba(160,214,180,0.3);
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .summary-grand .label {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--green);
+  }
+  .summary-grand .amt {
+    font-family: var(--font-display); font-size: 38px; font-weight: 300;
+    color: var(--white); line-height: 1;
+  }
+  .summary-note {
+    margin-top: 16px; padding: 12px 14px;
+    background: rgba(160,214,180,0.08); border-left: 2px solid var(--green);
+    font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.75);
+    line-height: 1.55;
+  }
+
+  .summary-actions { margin-top: 28px; display: flex; flex-direction: column; gap: 12px; }
+  .summary-actions button {
+    width: 100%; justify-content: center;
+  }
+  .btn-accept {
+    background: var(--green); color: var(--dark);
+    padding: 16px 24px; border-radius: 2px; border: none;
+    font-family: var(--font-body); font-size: 13px; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-accept:hover:not(:disabled) { background: var(--white); transform: translateY(-1px); }
+  .btn-accept:disabled { opacity: 0.6; cursor: wait; }
+
+  .btn-changes {
+    background: transparent; color: rgba(255,255,255,0.85);
+    padding: 16px 24px; border-radius: 2px;
+    border: 1px solid rgba(255,255,255,0.25);
+    font-family: var(--font-body); font-size: 13px; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-changes:hover { border-color: var(--green); color: var(--green); }
+
+  /* Accepted/changes banner */
+  .status-banner {
+    padding: 24px 32px; margin: 24px 0;
+    border-radius: 2px;
+  }
+  .status-banner.accepted {
+    background: rgba(160,214,180,0.15);
+    border-left: 2px solid var(--green);
+  }
+  .status-banner.changes_requested {
+    background: rgba(201,74,74,0.1);
+    border-left: 2px solid var(--red);
+  }
+  .status-banner h4 {
+    font-family: var(--font-display); font-size: 20px; font-weight: 400;
+    margin-bottom: 6px;
+  }
+  .status-banner p { font-size: 13px; color: var(--text-grey); }
+
+  /* Custom notes callout */
+  .notes-callout {
+    background: var(--off-white); border-left: 2px solid var(--green-dark);
+    padding: 20px 24px; margin-top: 24px;
+  }
+  .notes-callout .nc-label {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--green-dark); margin-bottom: 8px;
+  }
+  .notes-callout .nc-body { font-size: 14px; line-height: 1.6; color: var(--dark); white-space: pre-wrap; }
+
+  @media (max-width: 1024px) {
+    .package-inner { grid-template-columns: 1fr; gap: 40px; }
+    .summary-wrap { position: static; }
+    .onboarding-section { padding: 64px 40px; }
+    .package-section { padding: 64px 40px; }
+    .prepared-banner { padding: 20px 40px; }
+  }
+  @media (max-width: 640px) {
+    .prepared-banner { padding: 18px 24px; }
+    .prepared-name { font-size: 22px; }
+    .onboarding-section { padding: 48px 24px; }
+    .package-section { padding: 48px 24px; }
+    .service-block { grid-template-columns: 1fr; gap: 8px; }
+    .add-bar { grid-template-columns: 1fr; }
+    .item-row { grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 8px; }
+    .item-line { grid-column: 2; grid-row: 1; }
+    .item-qty { grid-column: 1; grid-row: 2; }
+    .item-remove { grid-column: 2; grid-row: 2; justify-self: end; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <img src="https://res.cloudinary.com/dxkpbjicu/image/upload/v1774556178/HANDS_Logo_BlackBG_HiRes_qtkac8.png" alt="HANDS Logistics" />
+    <div class="divider"></div>
+    <span class="sub">Your Proposal</span>
+  </div>
+  <div class="nav-actions">
+    <a class="nav-link" href="mailto:concierge@handslogistics.com">Contact</a>
+  </div>
+</nav>
+
+<!-- Loading state (default view until data fetches) -->
+<div id="loadingView" class="loading-state">
+  <div class="spinner"></div>
+  <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;">Loading your proposal</div>
+</div>
+
+<!-- Error state -->
+<div id="errorView" style="display:none; padding: 120px 40px; text-align: center;">
+  <div class="section-eyebrow" style="color: var(--red);">Proposal Not Found</div>
+  <h2 class="section-title">We couldn't find that proposal.</h2>
+  <p class="section-sub" style="max-width: 520px; margin: 0 auto 24px;">This link may be expired or typed incorrectly. Reach out and we'll send you a fresh one.</p>
+  <a class="btn-primary" href="mailto:concierge@handslogistics.com">Email concierge@handslogistics.com</a>
+</div>
+
+<!-- Main proposal (hidden until data loads) -->
+<div id="proposalView" style="display:none;">
+
+  <!-- Prepared For -->
+  <div class="prepared-banner">
+    <div class="prepared-eyebrow">Custom Proposal Prepared For</div>
+    <div class="prepared-name" id="preparedName">—</div>
+  </div>
+
+  <!-- Status banner (shown if already accepted or changes requested) -->
+  <div id="statusBanner" style="display:none;"></div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow" id="heroEyebrow">Your HANDS Logistics Proposal</div>
+      <h1 class="hero-headline">A <em>tailored operation</em>, purpose-built for your team.</h1>
+      <p class="hero-body">Below is exactly what working together would look like. Review the preview, explore the package we've put together, and either accept it as-is or let us know what to adjust.</p>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-strip">
+    <div class="marquee-inner">
+      <span class="marquee-item">Brand Activations</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">White-Glove Delivery</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Concierge 3PL</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Las Vegas</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Warehousing &amp; Storage</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Assembly &amp; Build-Out</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Brand Activations</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">White-Glove Delivery</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Concierge 3PL</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Las Vegas</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Warehousing &amp; Storage</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Assembly &amp; Build-Out</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+    </div>
+  </div>
+
+  <!-- ONBOARDING PREVIEW -->
+  <section class="onboarding-section">
+    <div class="onboarding-inner">
+      <div class="section-eyebrow">What HANDS Looks Like For You</div>
+      <p class="onboarding-intro" id="onboardingIntroText"></p>
+
+      <div class="service-block">
+        <div class="service-num">01 / Delivery Scheduling</div>
+        <div>
+          <div class="service-title">A dedicated portal for your team</div>
+          <div class="service-desc">Submit and track delivery requests on demand — no back-and-forth emails, just a clean interface built for operators.</div>
+          <a class="service-link" href="https://scheduleadelivery.netlify.app/" target="_blank">scheduleadelivery.netlify.app →</a>
+        </div>
+      </div>
+
+      <div class="service-block">
+        <div class="service-num">02 / Brand Activations</div>
+        <div>
+          <div class="service-title">Setup to teardown, handled</div>
+          <div class="service-desc">Venue drops, event build-outs, last-minute activation support. HANDS is on the ground and ready to move — your team focuses on the experience, not the logistics.</div>
+        </div>
+      </div>
+
+      <div class="service-block">
+        <div class="service-num">03 / Warehousing</div>
+        <div>
+          <div class="service-title">Inventory, organized and deployable</div>
+          <div class="service-desc">Your POSM, event materials, and displays live in our Las Vegas facility — tracked, staged, and ready to roll out whenever you need them.</div>
+        </div>
+      </div>
+
+      <div class="service-block">
+        <div class="service-num">04 / Inbound Shipments</div>
+        <div>
+          <div class="service-title">Every box received and logged</div>
+          <div class="service-desc">All inbound freight and POSM gets received, inspected, and logged by our team.</div>
+          <a class="service-link" href="mailto:inbound@handslogistics.com">inbound@handslogistics.com →</a>
+        </div>
+      </div>
+
+      <div class="service-block">
+        <div class="service-num">05 / Concierge Team</div>
+        <div>
+          <div class="service-title">A real team, not a ticket system</div>
+          <div class="service-desc">Every client gets direct access to our concierge inbox — a single point of contact who knows your program and handles exceptions before they become problems.</div>
+          <a class="service-link" href="mailto:concierge@handslogistics.com">concierge@handslogistics.com →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PACKAGE / QUOTE BUILDER -->
+  <section class="package-section">
+    <div class="package-inner">
+      <!-- LEFT: editable package -->
+      <div class="package-builders">
+        <div>
+          <div class="section-eyebrow">Your Tailored Package</div>
+          <h2 class="section-title">The operation we'd run for you.</h2>
+          <p class="section-sub">Pre-filled with what we've scoped. You can explore, adjust, or add items freely — our rates are our rates, always transparent.</p>
+        </div>
+
+        <div class="notes-callout" id="notesCallout" style="display:none;">
+          <div class="nc-label">A Note On This Proposal</div>
+          <div class="nc-body" id="notesBody"></div>
+        </div>
+
+        <!-- Storage Builder -->
+        <div class="pkg-card" id="storageBuilder">
+          <div class="pkg-header">
+            <h3>Storage</h3>
+            <span class="hint">Billed quarterly in advance · $850/mo min</span>
+          </div>
+          <div class="add-bar">
+            <div class="field">
+              <label for="storageType">Add Storage</label>
+              <select id="storageType"></select>
+            </div>
+            <div class="field">
+              <label><span id="storageQtyLabel">Quantity</span></label>
+              <input id="storageQty" type="number" min="1" step="1" value="1" />
+            </div>
+            <button class="btn-primary" onclick="addStorageItem()">Add</button>
+          </div>
+          <div class="items-list" id="storageList"></div>
+        </div>
+
+        <!-- Delivery Builder -->
+        <div class="pkg-card" id="deliveryBuilder">
+          <div class="pkg-header">
+            <h3>Delivery</h3>
+            <span class="hint">Per-delivery pricing · Las Vegas metro + regional</span>
+          </div>
+          <div class="add-bar">
+            <div class="field">
+              <label for="deliveryType">Add Delivery</label>
+              <select id="deliveryType"></select>
+            </div>
+            <div class="field">
+              <label><span id="deliveryQtyLabel">Quantity</span></label>
+              <input id="deliveryQty" type="number" min="1" step="1" value="1" />
+            </div>
+            <button class="btn-primary" onclick="addDeliveryItem()">Add</button>
+          </div>
+          <div class="items-list" id="deliveryList"></div>
+        </div>
+
+        <div style="font-size: 13px; color: var(--text-grey); line-height: 1.75; padding-top: 8px;">
+          <strong style="color: var(--dark); font-weight: 500;">Labor note.</strong> Rates above cover space and transportation. Handling labor — loading, unloading, pick-and-pack, assembly, on-site support — is quoted separately based on scope. We'll build a labor estimate alongside this whenever it's relevant.
+        </div>
+      </div>
+
+      <!-- RIGHT: sticky summary + actions -->
+      <aside class="summary-wrap">
+        <div class="summary">
+          <div class="summary-eyebrow">Investment Summary</div>
+          <div class="summary-title">Your <em>quarterly</em> investment</div>
+
+          <div id="summaryList">
+            <div class="summary-row"><span class="label">No items yet</span><span class="amt">—</span></div>
+          </div>
+
+          <div class="summary-grand">
+            <span class="label">Quarterly Total</span>
+            <span class="amt" id="summaryQuarterly">$0</span>
+          </div>
+
+          <div class="summary-note">
+            Storage billed quarterly in advance. Delivery invoiced per service. 30-day notice to cancel at quarter-end. All figures exclude labor and optional add-ons.
+          </div>
+
+          <div class="summary-actions">
+            <button class="btn-accept" id="acceptBtn" onclick="acceptProposal()">Accept This Proposal</button>
+            <button class="btn-changes" onclick="openChangesModal()">Request Changes</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="https://res.cloudinary.com/dxkpbjicu/image/upload/v1774556178/HANDS_Logo_BlackBG_HiRes_qtkac8.png" alt="HANDS Logistics" />
+      </div>
+      <div class="footer-meta">Las Vegas, NV · concierge@handslogistics.com</div>
+    </div>
+  </footer>
+</div>
+
+<!-- Request Changes Modal -->
+<div class="modal-backdrop" id="changesModal" onclick="if(event.target===this) closeChangesModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Request Changes</h3>
+      <button class="modal-close" onclick="closeChangesModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size: 14px; color: var(--text-grey); margin-bottom: 18px; line-height: 1.6;">Let us know what to adjust and we'll revise the proposal. Your notes go directly to Jon.</p>
+      <div class="field">
+        <label for="changeNotes">What would you like to change?</label>
+        <textarea id="changeNotes" rows="5" placeholder="e.g. Can we reduce storage by 5 pallets and add two more monthly deliveries? Also need to start May 1 instead of April 15."></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeChangesModal()">Cancel</button>
+      <button class="btn-primary" id="submitChangesBtn" onclick="submitChanges()">Send Request</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/rates.js"></script>
+<script>
+  // ── STATE ──
+  let proposal = null;
+  let storageItems = [];
+  let deliveryItems = [];
+  let slug = null;
+
+  // ── INIT ──
+  document.addEventListener("DOMContentLoaded", loadProposal);
+
+  function getSlug() {
+    // From URL query param (set by netlify.toml redirect /proposal/:slug → /proposal.html?slug=:slug)
+    const params = new URLSearchParams(location.search);
+    return params.get("slug");
+  }
+
+  async function loadProposal() {
+    slug = getSlug();
+    if (!slug) { showError(); return; }
+
+    try {
+      const res = await fetch("/.netlify/functions/proposals", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "load", slug })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      proposal = data.proposal;
+      renderProposal();
+    } catch (err) {
+      console.error("Load failed:", err);
+      showError();
+    }
+  }
+
+  function showError() {
+    document.getElementById("loadingView").style.display = "none";
+    document.getElementById("errorView").style.display = "block";
+  }
+
+  function renderProposal() {
+    // Header
+    document.getElementById("preparedName").textContent = proposal.client;
+    document.getElementById("heroEyebrow").textContent = `Prepared for ${proposal.client}`;
+
+    // Status banner (if already accepted or changes requested)
+    renderStatusBanner();
+
+    // Onboarding intro (use custom if present, else default)
+    const defaultIntro = `Thank you for considering HANDS Logistics — we'd love to be the team behind ${proposal.client}'s operations here in Las Vegas. To give you a feel for what working together would actually look like, here's a preview of what your team would have access to from day one.`;
+    document.getElementById("onboardingIntroText").textContent = proposal.onboardingIntro || defaultIntro;
+
+    // Custom notes callout
+    if (proposal.customNotes) {
+      document.getElementById("notesCallout").style.display = "block";
+      document.getElementById("notesBody").textContent = proposal.customNotes;
+    }
+
+    // Populate dropdowns
+    populateStorageDropdown();
+    populateDeliveryDropdown();
+
+    // Load items (ensure each has a local UI id)
+    storageItems = (proposal.storageItems || []).map(it => ({
+      ...it, id: Date.now() + Math.random()
+    }));
+    deliveryItems = (proposal.deliveryItems || []).map(it => ({
+      ...it, id: Date.now() + Math.random()
+    }));
+
+    renderStorage();
+    renderDelivery();
+    renderSummary();
+
+    // Show proposal
+    document.getElementById("loadingView").style.display = "none";
+    document.getElementById("proposalView").style.display = "block";
+  }
+
+  function renderStatusBanner() {
+    const banner = document.getElementById("statusBanner");
+    if (proposal.status === "accepted") {
+      banner.className = "status-banner accepted";
+      banner.style.cssText = "display:block; margin: 0 auto; max-width: 1400px;";
+      banner.innerHTML = `
+        <h4>✓ Proposal Accepted</h4>
+        <p>You accepted this proposal on ${formatDate(proposal.acceptedAt)}. Jon has been notified and will reach out to coordinate kickoff.</p>`;
+    } else if (proposal.status === "changes_requested") {
+      banner.className = "status-banner changes_requested";
+      banner.style.cssText = "display:block; margin: 0 auto; max-width: 1400px;";
+      banner.innerHTML = `
+        <h4>↩ Changes Requested</h4>
+        <p>Your change request was sent to Jon. You'll hear back shortly with a revised proposal.</p>`;
+    }
+  }
+
+  function formatDate(iso) {
+    try {
+      return new Date(iso).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+    } catch { return iso; }
+  }
+
+  // ── DROPDOWNS ──
+  function populateStorageDropdown() {
+    const select = document.getElementById("storageType");
+    select.innerHTML = `
+      <optgroup label="Rack Storage">
+        <option value="bay">Full Bay — 12 pallets ($460/mo)</option>
+        <option value="pallet">Standard Pallet ($45/mo)</option>
+        <option value="overstock">Overstock Pallet ($35/mo)</option>
+      </optgroup>
+      <optgroup label="Bulk Floor">
+        <option value="bulk_std">Standard Bulk ($10/sqft/mo)</option>
+        <option value="bulk_prem">Oversize/Irregular ($12/sqft/mo)</option>
+      </optgroup>
+      <optgroup label="Short-term (1wk min)">
+        <option value="st_pallet">Short-term Pallet ($35/pallet/wk)</option>
+        <option value="st_bulk">Short-term Bulk ($3.50/sqft/wk)</option>
+      </optgroup>`;
+    select.addEventListener("change", () => {
+      document.getElementById("storageQtyLabel").textContent = STORAGE_RATES[select.value].qtyLabel;
+    });
+    document.getElementById("storageQtyLabel").textContent = STORAGE_RATES[select.value].qtyLabel;
+  }
+
+  function populateDeliveryDropdown() {
+    const select = document.getElementById("deliveryType");
+    let html = '<optgroup label="Delivery Tiers">';
+    Object.entries(DELIVERY_RATES).filter(([k,v]) => v.type === "tier").forEach(([k,v]) => {
+      html += `<option value="${k}">${v.name} ($${v.price})</option>`;
+    });
+    html += '</optgroup><optgroup label="Add-Ons">';
+    Object.entries(DELIVERY_RATES).filter(([k,v]) => v.type === "addon").forEach(([k,v]) => {
+      html += `<option value="${k}">${v.name} ($${v.price})</option>`;
+    });
+    html += '</optgroup><optgroup label="Surcharges">';
+    Object.entries(DELIVERY_RATES).filter(([k,v]) => v.type === "surcharge").forEach(([k,v]) => {
+      const price = v.percent ? `+${v.percent}%` : `$${v.price}`;
+      html += `<option value="${k}">${v.name} (${price})</option>`;
+    });
+    html += '</optgroup>';
+    select.innerHTML = html;
+  }
+
+  // ── ITEM MGMT ──
+  function addStorageItem() {
+    const type = document.getElementById("storageType").value;
+    const qty = parseFloat(document.getElementById("storageQty").value);
+    if (!qty || qty <= 0) { showToast("Enter a valid quantity", true); return; }
+    storageItems.push({ id: Date.now() + Math.random(), type, qty });
+    document.getElementById("storageQty").value = 1;
+    renderStorage(); renderSummary();
+  }
+  function removeStorageItem(id) {
+    storageItems = storageItems.filter(i => i.id !== id);
+    renderStorage(); renderSummary();
+  }
+  function updateStorageQty(id, qty) {
+    const q = parseFloat(qty);
+    if (!q || q <= 0) return;
+    const item = storageItems.find(i => i.id === id);
+    if (item) { item.qty = q; renderStorage(); renderSummary(); }
+  }
+  function addDeliveryItem() {
+    const type = document.getElementById("deliveryType").value;
+    const qty = parseFloat(document.getElementById("deliveryQty").value);
+    if (!qty || qty <= 0) { showToast("Enter a valid quantity", true); return; }
+    deliveryItems.push({ id: Date.now() + Math.random(), type, qty });
+    document.getElementById("deliveryQty").value = 1;
+    renderDelivery(); renderSummary();
+  }
+  function removeDeliveryItem(id) {
+    deliveryItems = deliveryItems.filter(i => i.id !== id);
+    renderDelivery(); renderSummary();
+  }
+  function updateDeliveryQty(id, qty) {
+    const q = parseFloat(qty);
+    if (!q || q <= 0) return;
+    const item = deliveryItems.find(i => i.id === id);
+    if (item) { item.qty = q; renderDelivery(); renderSummary(); }
+  }
+
+  // ── RENDER ──
+  function renderStorage() {
+    const list = document.getElementById("storageList");
+    if (storageItems.length === 0) {
+      list.innerHTML = '<div class="empty-state">No storage in this proposal. Add an item above if you need space.</div>';
+      return;
+    }
+    list.innerHTML = storageItems.map(it => {
+      const rate = STORAGE_RATES[it.type];
+      const line = it.qty * rate.price;
+      return `
+        <div class="item-row">
+          <div class="item-info">
+            <div class="name">${rate.name}</div>
+            <div class="meta">${fmt(rate.price)}/${rate.unitShort}${rate.isShortTerm ? " · 1wk min" : ""}</div>
+          </div>
+          <div class="item-qty"><input type="number" min="1" value="${it.qty}" onchange="updateStorageQty(${it.id}, this.value)" /></div>
+          <div class="item-line">${fmt(line)}</div>
+          <button class="item-remove" onclick="removeStorageItem(${it.id})">&times;</button>
+        </div>`;
+    }).join("");
+  }
+
+  function renderDelivery() {
+    const list = document.getElementById("deliveryList");
+    if (deliveryItems.length === 0) {
+      list.innerHTML = '<div class="empty-state">No delivery in this proposal. Add services above as needed.</div>';
+      return;
+    }
+    list.innerHTML = deliveryItems.map(it => {
+      const rate = DELIVERY_RATES[it.type];
+      const line = calcDeliveryLine(it, deliveryItems);
+      const displayPrice = rate.percent
+        ? `+${rate.percent}% of tier total`
+        : `${fmt(rate.price)}${rate.unit === "flat" ? "" : " / " + (rate.unit || "each")}`;
+      return `
+        <div class="item-row">
+          <div class="item-info">
+            <div class="name">${rate.name}</div>
+            <div class="meta">${displayPrice}</div>
+          </div>
+          <div class="item-qty"><input type="number" min="1" value="${it.qty}" onchange="updateDeliveryQty(${it.id}, this.value)" /></div>
+          <div class="item-line">${fmt(line)}</div>
+          <button class="item-remove" onclick="removeDeliveryItem(${it.id})">&times;</button>
+        </div>`;
+    }).join("");
+  }
+
+  function renderSummary() {
+    const s = calcStorageTotals(storageItems);
+    const d = calcDeliveryTotal(deliveryItems);
+    const quarterly = (s.monthly * 3) + s.shortTerm + d;
+
+    const summaryList = document.getElementById("summaryList");
+    const rows = [];
+    if (s.monthly > 0) rows.push(`<div class="summary-row"><span class="label">Storage (${fmt(s.monthly)}/mo × 3)</span><span class="amt">${fmt(s.monthly * 3)}</span></div>`);
+    if (s.shortTerm > 0) rows.push(`<div class="summary-row"><span class="label">Short-term storage</span><span class="amt">${fmt(s.shortTerm)}</span></div>`);
+    if (d > 0) rows.push(`<div class="summary-row"><span class="label">Delivery</span><span class="amt">${fmt(d)}</span></div>`);
+
+    summaryList.innerHTML = rows.length > 0
+      ? rows.join("")
+      : '<div class="summary-row"><span class="label">No items yet</span><span class="amt">—</span></div>';
+
+    document.getElementById("summaryQuarterly").textContent = fmt(quarterly);
+  }
+
+  // ── ACCEPT ──
+  async function acceptProposal() {
+    const btn = document.getElementById("acceptBtn");
+    if (!confirm("Accept this proposal? Jon will be notified and will follow up to kick off onboarding.")) return;
+
+    btn.disabled = true;
+    btn.textContent = "Sending...";
+    try {
+      const res = await fetch("/.netlify/functions/proposals", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "accept", slug })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      showToast("✓ Proposal accepted — you'll hear from us shortly");
+      // Reload to show status banner
+      setTimeout(() => location.reload(), 1200);
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = "Accept This Proposal";
+      showToast("Send failed — please email concierge@handslogistics.com", true);
+    }
+  }
+
+  // ── REQUEST CHANGES ──
+  function openChangesModal() { document.getElementById("changesModal").classList.add("open"); }
+  function closeChangesModal() { document.getElementById("changesModal").classList.remove("open"); }
+
+  async function submitChanges() {
+    const notes = document.getElementById("changeNotes").value.trim();
+    if (!notes) { showToast("Tell us what to change", true); return; }
+    const btn = document.getElementById("submitChangesBtn");
+    btn.disabled = true;
+    btn.textContent = "Sending...";
+    try {
+      const res = await fetch("/.netlify/functions/proposals", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "changes", slug, notes })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      showToast("✓ Change request sent");
+      closeChangesModal();
+      setTimeout(() => location.reload(), 1200);
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = "Send Request";
+      showToast("Send failed — please email concierge@handslogistics.com", true);
+    }
+  }
+
+  // ── TOAST ──
+  let toastTimer;
+  function showToast(msg, isError = false) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.toggle("error", isError);
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove("show"), 3000);
+  }
+</script>
+</body>
+</html>
