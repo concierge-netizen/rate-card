@@ -1,20 +1,16 @@
-// ──────────────────────────────────────────────────────────────
-// HANDS Logistics — Send Quote via Resend
-// Netlify Function (runs server-side)
-// ──────────────────────────────────────────────────────────────
+// ───────────────────────────────────────────────────────────────
+// HANDS Logistics — Send Proposal Email via Resend
+// Admin-initiated only (requires password)
+// ───────────────────────────────────────────────────────────────
 //
-// Env vars required (set in Netlify dashboard):
-//   RESEND_API_KEY   — your Resend API key (starts with re_...)
-//
-// Endpoint: POST /.netlify/functions/send-quote
-// Body: { to, subject, body }
-// ──────────────────────────────────────────────────────────────
+// POST body: { password, to, subject, body, slug }
+// Env vars: RESEND_API_KEY, ADMIN_PASSWORD
+// ───────────────────────────────────────────────────────────────
 
 const FROM_ADDRESS = "HANDS Logistics <concierge@handslogistics.com>";
 const REPLY_TO = "concierge@handslogistics.com";
 
 exports.handler = async (event) => {
-  // ── CORS / METHOD CHECK ──
   const headers = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
@@ -25,81 +21,51 @@ exports.handler = async (event) => {
   if (event.httpMethod === "OPTIONS") {
     return { statusCode: 204, headers, body: "" };
   }
-
   if (event.httpMethod !== "POST") {
-    return {
-      statusCode: 405,
-      headers,
-      body: JSON.stringify({ error: "Method not allowed" })
-    };
+    return { statusCode: 405, headers, body: JSON.stringify({ error: "POST only" }) };
   }
 
-  // ── API KEY CHECK ──
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({
-        error: "RESEND_API_KEY not configured. Add it in Netlify → Site settings → Environment variables."
-      })
+      body: JSON.stringify({ error: "RESEND_API_KEY not configured in Netlify env vars" })
     };
   }
 
-  // ── PARSE BODY ──
   let payload;
   try {
     payload = JSON.parse(event.body || "{}");
   } catch (e) {
-    return {
-      statusCode: 400,
-      headers,
-      body: JSON.stringify({ error: "Invalid JSON body" })
-    };
+    return { statusCode: 400, headers, body: JSON.stringify({ error: "Invalid JSON" }) };
   }
 
-  const { to, subject, body } = payload;
+  const { password, to, subject, body } = payload;
 
-  // ── VALIDATE ──
+  // Admin password required
+  const expected = process.env.ADMIN_PASSWORD;
+  if (!expected || password !== expected) {
+    return { statusCode: 401, headers, body: JSON.stringify({ error: "Unauthorized" }) };
+  }
+
   if (!to || !to.includes("@")) {
-    return {
-      statusCode: 400,
-      headers,
-      body: JSON.stringify({ error: "Valid recipient email required" })
-    };
+    return { statusCode: 400, headers, body: JSON.stringify({ error: "Valid recipient email required" }) };
   }
-  if (!subject || subject.trim().length === 0) {
-    return {
-      statusCode: 400,
-      headers,
-      body: JSON.stringify({ error: "Subject required" })
-    };
-  }
-  if (!body || body.trim().length === 0) {
-    return {
-      statusCode: 400,
-      headers,
-      body: JSON.stringify({ error: "Email body required" })
-    };
+  if (!subject || !body) {
+    return { statusCode: 400, headers, body: JSON.stringify({ error: "Subject and body required" }) };
   }
 
-  // ── CONVERT PLAIN TEXT BODY TO HTML ──
-  // Preserve line breaks and make it render cleanly in email clients
   const htmlBody = `<!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
+<head><meta charset="UTF-8">
 <style>
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; color: #111110; line-height: 1.6; max-width: 640px; margin: 0 auto; padding: 24px; background: #ffffff; }
   pre { font-family: inherit; white-space: pre-wrap; word-wrap: break-word; margin: 0; font-size: 15px; }
-</style>
-</head>
-<body>
-<pre>${escapeHtml(body)}</pre>
-</body>
+</style></head>
+<body><pre>${escapeHtml(body)}</pre></body>
 </html>`;
 
-  // ── SEND VIA RESEND ──
   try {
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -111,51 +77,26 @@ exports.handler = async (event) => {
         from: FROM_ADDRESS,
         to: [to],
         reply_to: REPLY_TO,
-        subject: subject,
+        subject,
         html: htmlBody,
-        text: body   // plain text fallback for email clients that prefer it
+        text: body
       })
     });
 
     const result = await response.json();
-
     if (!response.ok) {
-      // Resend returns error details in the response body
-      console.error("Resend API error:", result);
       return {
         statusCode: response.status,
         headers,
-        body: JSON.stringify({
-          error: result.message || result.error || "Resend rejected the send",
-          details: result
-        })
+        body: JSON.stringify({ error: result.message || "Resend rejected the send", details: result })
       };
     }
-
-    // Success
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({
-        success: true,
-        id: result.id,
-        to: to
-      })
-    };
-
+    return { statusCode: 200, headers, body: JSON.stringify({ success: true, id: result.id }) };
   } catch (err) {
-    console.error("Send failed:", err);
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({
-        error: "Network or server error: " + err.message
-      })
-    };
+    return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
   }
 };
 
-// ── HELPERS ──
 function escapeHtml(str) {
   return String(str)
     .replace(/&/g, "&amp;")
