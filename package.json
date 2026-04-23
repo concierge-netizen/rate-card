@@ -1,0 +1,9 @@
+{
+  "name": "hands-rate-card",
+  "version": "1.0.0",
+  "description": "HANDS Logistics proposal generator",
+  "private": true,
+  "dependencies": {
+    "@netlify/blobs": "^10.7.4"
+  }
+}
