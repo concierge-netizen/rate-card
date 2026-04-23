@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HANDS Logistics — Storage Rate Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --white:#ffffff; --off-white:#f8f7f4; --light-grey:#efefed; --mid-grey:#c8c8c4;
+    --text-grey:#7a7a76; --dark:#111110; --green:#a0d6b4; --green-dark:#6dba96;
+    --red:#c94a4a;
+    --font-display:'Cormorant Garamond', Georgia, serif;
+    --font-body:'DM Sans', sans-serif;
+    --font-mono:'DM Mono', monospace;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-body); background: var(--off-white); color: var(--dark); font-size: 16px; line-height: 1.6; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px; height: 72px;
+    background: rgba(255,255,255,0.96); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--light-grey);
+  }
+  .nav-brand { display: flex; align-items: center; gap: 16px; }
+  .nav-brand img { height: 40px; width: auto; display: block; }
+  .nav-brand .divider { width: 1px; height: 24px; background: var(--light-grey); }
+  .nav-brand .sub {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--text-grey);
+  }
+  .nav-actions { display: flex; gap: 12px; align-items: center; }
+  .btn {
+    background: var(--dark); color: var(--white);
+    padding: 12px 22px; border-radius: 2px; border: none;
+    font-family: var(--font-body); font-size: 12px; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    cursor: pointer; transition: background 0.2s, transform 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn:hover { background: var(--green-dark); transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent; color: var(--dark);
+    border: 1px solid var(--mid-grey);
+  }
+  .btn-ghost:hover { background: var(--dark); color: var(--white); border-color: var(--dark); }
+
+  /* HERO */
+  .hero {
+    background: var(--dark); color: var(--white);
+    padding: 72px 48px 56px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content:''; position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(109,186,150,0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 70%, rgba(160,214,180,0.08) 0%, transparent 55%);
+    pointer-events: none;
+  }
+  .hero-inner { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; }
+  .hero-eyebrow {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--green); margin-bottom: 16px;
+  }
+  .hero-headline {
+    font-family: var(--font-display);
+    font-size: clamp(42px, 5vw, 64px); font-weight: 300; line-height: 1.05;
+    letter-spacing: -0.01em; margin-bottom: 20px; max-width: 820px;
+  }
+  .hero-headline em { font-style: italic; color: var(--green-dark); }
+  .hero-body {
+    font-size: 16px; font-weight: 300;
+    color: rgba(255,255,255,0.7); line-height: 1.75;
+    max-width: 640px;
+  }
+
+  /* MAIN LAYOUT */
+  main {
+    max-width: 1200px; margin: 0 auto;
+    padding: 64px 48px 96px;
+    display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px;
+    align-items: start;
+  }
+  .section-eyebrow {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--green-dark); margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: var(--font-display); font-size: 32px; font-weight: 400;
+    line-height: 1.15; margin-bottom: 8px;
+  }
+  .section-sub {
+    font-size: 14px; font-weight: 300; color: var(--text-grey);
+    margin-bottom: 28px;
+  }
+
+  /* BUILDER (left column) */
+  .builder { display: flex; flex-direction: column; gap: 32px; }
+  .client-card {
+    background: var(--white); padding: 28px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+    border-left: 2px solid var(--green);
+  }
+  .client-card .section-title { font-size: 22px; margin-bottom: 4px; }
+  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--text-grey);
+  }
+  .field input, .field textarea {
+    font-family: var(--font-body); font-size: 14px; color: var(--dark);
+    background: var(--off-white); border: 1px solid var(--light-grey);
+    padding: 12px 14px; border-radius: 2px; outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .field input:focus, .field textarea:focus { border-color: var(--green-dark); background: var(--white); }
+  .field textarea { resize: vertical; min-height: 72px; font-family: var(--font-body); }
+
+  /* LINE ITEMS */
+  .items-card { background: var(--white); padding: 0; box-shadow: 0 2px 20px rgba(0,0,0,0.06); }
+  .items-header {
+    padding: 24px 28px; border-bottom: 1px solid var(--light-grey);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .items-header .section-title { font-size: 22px; margin: 0; }
+  .tier-tabs { display: flex; gap: 2px; background: var(--light-grey); padding: 2px; border-radius: 2px; }
+  .tier-tab {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 8px 14px; background: transparent;
+    border: none; cursor: pointer; color: var(--text-grey); transition: all 0.2s;
+    border-radius: 2px;
+  }
+  .tier-tab.active { background: var(--dark); color: var(--white); }
+
+  .add-bar {
+    padding: 20px 28px; display: grid; gap: 12px;
+    grid-template-columns: 2fr 1fr auto;
+    align-items: end; border-bottom: 1px solid var(--light-grey);
+    background: var(--off-white);
+  }
+  .add-bar select, .add-bar input {
+    font-family: var(--font-body); font-size: 14px;
+    padding: 10px 12px; border: 1px solid var(--light-grey);
+    background: var(--white); border-radius: 2px; outline: none;
+  }
+  .add-bar select:focus, .add-bar input:focus { border-color: var(--green-dark); }
+  .add-bar .field { gap: 4px; }
+
+  .items-list { padding: 8px 0; min-height: 100px; }
+  .item-row {
+    display: grid; grid-template-columns: 1fr auto auto auto;
+    align-items: center; gap: 16px;
+    padding: 14px 28px;
+    border-bottom: 1px solid var(--light-grey);
+    transition: background 0.15s;
+  }
+  .item-row:hover { background: var(--off-white); }
+  .item-row:last-child { border-bottom: none; }
+  .item-info .name { font-size: 14px; font-weight: 500; }
+  .item-info .meta {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em;
+    color: var(--text-grey); margin-top: 2px; text-transform: uppercase;
+  }
+  .item-qty input {
+    width: 64px; text-align: center;
+    font-family: var(--font-mono); font-size: 13px;
+    padding: 6px 8px; border: 1px solid var(--light-grey); border-radius: 2px;
+    background: var(--white); outline: none;
+  }
+  .item-qty input:focus { border-color: var(--green-dark); }
+  .item-line {
+    font-family: var(--font-mono); font-size: 14px; font-weight: 500;
+    min-width: 88px; text-align: right;
+  }
+  .item-remove {
+    background: transparent; border: none; cursor: pointer;
+    color: var(--mid-grey); font-size: 18px; padding: 4px 8px;
+    transition: color 0.2s;
+  }
+  .item-remove:hover { color: var(--red); }
+  .empty-state {
+    padding: 40px 28px; text-align: center; color: var(--text-grey);
+    font-size: 13px; font-style: italic;
+  }
+
+  /* NOTES */
+  .notes-card { background: var(--white); padding: 28px; box-shadow: 0 2px 20px rgba(0,0,0,0.06); }
+
+  /* SUMMARY (right column, sticky) */
+  .summary-wrap { position: sticky; top: 96px; }
+  .summary {
+    background: var(--dark); color: var(--white);
+    padding: 36px 32px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  }
+  .summary-eyebrow {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--green); margin-bottom: 12px;
+  }
+  .summary-title {
+    font-family: var(--font-display); font-size: 28px; font-weight: 300;
+    line-height: 1.1; margin-bottom: 24px;
+  }
+  .summary-title em { font-style: italic; color: var(--green); }
+  .summary-list { border-top: 1px solid rgba(255,255,255,0.12); margin-bottom: 8px; }
+  .summary-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 13px; font-weight: 300;
+  }
+  .summary-row .label { color: rgba(255,255,255,0.7); padding-right: 16px; }
+  .summary-row .amt { font-family: var(--font-mono); color: var(--white); }
+  .summary-total {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding-top: 20px; margin-top: 8px;
+    border-top: 1px solid rgba(160,214,180,0.3);
+  }
+  .summary-total .label {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--green);
+  }
+  .summary-total .amt {
+    font-family: var(--font-display); font-size: 40px; font-weight: 300;
+    color: var(--white); line-height: 1;
+  }
+  .summary-quarterly {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding-top: 14px; margin-top: 0;
+  }
+  .summary-quarterly .label {
+    font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: rgba(255,255,255,0.5);
+  }
+  .summary-quarterly .amt {
+    font-family: var(--font-mono); font-size: 15px; font-weight: 500;
+    color: rgba(255,255,255,0.85);
+  }
+  .summary-note {
+    margin-top: 16px; padding: 12px 14px;
+    background: rgba(160,214,180,0.08); border-left: 2px solid var(--green);
+    font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.75);
+    line-height: 1.5;
+  }
+  .summary-minimum {
+    margin-top: 12px; padding: 12px 14px;
+    background: rgba(201,74,74,0.12); border-left: 2px solid var(--red);
+    font-size: 12px; font-weight: 400; color: #ffb4b4;
+    line-height: 1.5;
+  }
+  .summary-minimum.hidden { display: none; }
+  .summary-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
+  .summary-actions .btn { justify-content: center; width: 100%; }
+  .summary-actions .btn-green {
+    background: var(--green-dark); color: var(--dark);
+  }
+  .summary-actions .btn-green:hover { background: var(--green); color: var(--dark); }
+  .summary-actions .btn-outline {
+    background: transparent; color: var(--white);
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+  .summary-actions .btn-outline:hover { border-color: var(--green); color: var(--green); background: transparent; }
+
+  /* REFERENCE RATES TABLE (under builder) */
+  .ref-card { background: var(--white); padding: 32px; box-shadow: 0 2px 20px rgba(0,0,0,0.06); margin-top: 32px; }
+  .ref-title { font-family: var(--font-display); font-size: 20px; font-weight: 400; margin-bottom: 18px; }
+  .ref-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .ref-table th {
+    text-align: left; padding: 10px 12px;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-grey);
+    border-bottom: 1px solid var(--light-grey); font-weight: 500;
+  }
+  .ref-table th:last-child, .ref-table td:last-child { text-align: right; }
+  .ref-table td {
+    padding: 12px; border-bottom: 1px solid var(--light-grey);
+    font-size: 13px; font-weight: 300;
+  }
+  .ref-table td.rate { font-family: var(--font-mono); font-weight: 500; font-size: 14px; }
+  .ref-table tr:last-child td { border-bottom: none; }
+  .ref-group { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--green-dark); padding-top: 18px !important; }
+
+  /* 3PL SERVICES CARD */
+  .services-card {
+    background: var(--dark); color: var(--white);
+    padding: 36px 32px; margin-top: 32px;
+    position: relative; overflow: hidden;
+  }
+  .services-card::before {
+    content:''; position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse at 85% 20%, rgba(160,214,180,0.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 15% 100%, rgba(109,186,150,0.08) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .services-card > * { position: relative; z-index: 1; }
+  .services-card .section-eyebrow { color: var(--green); margin-bottom: 10px; }
+  .services-card .ref-title {
+    color: var(--white); font-size: 26px; margin-bottom: 8px;
+  }
+  .services-card .ref-title em { font-style: italic; color: var(--green); }
+  .services-intro {
+    font-size: 14px; font-weight: 300; color: rgba(255,255,255,0.7);
+    line-height: 1.75; max-width: 620px; margin-bottom: 28px;
+  }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px;
+    background: rgba(255,255,255,0.06);
+  }
+  .service-tile {
+    background: rgba(17,17,16,0.6); padding: 22px 24px;
+    display: flex; flex-direction: column; gap: 8px;
+    transition: background 0.3s;
+  }
+  .service-tile:hover { background: rgba(160,214,180,0.08); }
+  .service-tile .sv-num {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em;
+    color: var(--green); text-transform: uppercase;
+  }
+  .service-tile .sv-name {
+    font-family: var(--font-display); font-size: 20px; font-weight: 400;
+    color: var(--white); line-height: 1.2;
+  }
+  .service-tile .sv-desc {
+    font-size: 13px; font-weight: 300; color: rgba(255,255,255,0.65);
+    line-height: 1.65;
+  }
+  .labor-callout {
+    margin-top: 24px; padding: 16px 18px;
+    background: rgba(160,214,180,0.08);
+    border-left: 2px solid var(--green);
+    font-size: 13px; font-weight: 300; color: rgba(255,255,255,0.85);
+    line-height: 1.6;
+  }
+  .labor-callout strong { color: var(--green); font-weight: 500; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; display: block; margin-bottom: 6px; }
+  @media (max-width: 640px) {
+    .services-grid { grid-template-columns: 1fr; }
+  }
+
+  /* MODAL */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(17,17,16,0.72);
+    backdrop-filter: blur(6px);
+    display: none; align-items: center; justify-content: center;
+    z-index: 1000; padding: 24px;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    background: var(--white); max-width: 720px; width: 100%;
+    max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+  }
+  .modal-head {
+    padding: 24px 28px; border-bottom: 1px solid var(--light-grey);
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; background: var(--white); z-index: 2;
+  }
+  .modal-head h3 { font-family: var(--font-display); font-size: 24px; font-weight: 400; }
+  .modal-close {
+    background: transparent; border: none; cursor: pointer;
+    font-size: 24px; color: var(--text-grey); padding: 4px 10px;
+  }
+  .modal-close:hover { color: var(--dark); }
+  .modal-body { padding: 24px 28px; }
+  .modal-body .field { margin-bottom: 18px; }
+  .email-preview {
+    background: var(--off-white); padding: 20px; border: 1px solid var(--light-grey);
+    font-size: 13px; line-height: 1.7; white-space: pre-wrap;
+    font-family: var(--font-body); max-height: 300px; overflow-y: auto;
+    margin-bottom: 18px;
+  }
+  .modal-actions { display: flex; gap: 12px; justify-content: flex-end; padding: 20px 28px; border-top: 1px solid var(--light-grey); background: var(--off-white); }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--dark); color: var(--white); padding: 14px 24px;
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em;
+    text-transform: uppercase; box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    opacity: 0; transition: opacity 0.3s, transform 0.3s; z-index: 1100;
+    border-left: 2px solid var(--green);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark); color: rgba(255,255,255,0.55);
+    padding: 48px 48px 32px; margin-top: 0;
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  .footer-brand { display: flex; align-items: center; gap: 14px; }
+  .footer-brand img { height: 36px; width: auto; display: block; }
+  .footer-meta { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; }
+
+  @media (max-width: 1024px) {
+    main { grid-template-columns: 1fr; padding: 48px 32px; gap: 32px; }
+    .summary-wrap { position: static; }
+    nav, .hero, footer { padding-left: 32px; padding-right: 32px; }
+    .hero { padding-top: 56px; padding-bottom: 44px; }
+    .hero-headline { font-size: clamp(34px, 6vw, 48px); }
+  }
+  @media (max-width: 640px) {
+    .field-grid { grid-template-columns: 1fr; }
+    .add-bar { grid-template-columns: 1fr; }
+    .nav-brand .sub { display: none; }
+    .item-row { grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 8px; }
+    .item-line { grid-column: 2; grid-row: 1; }
+    .item-qty { grid-column: 1; grid-row: 2; }
+    .item-remove { grid-column: 2; grid-row: 2; justify-self: end; }
+  }
+
+  @media print {
+    nav, .summary-actions, .add-bar, .item-remove, .modal-backdrop, footer { display: none !important; }
+    body { background: white; }
+    .summary { background: white; color: var(--dark); box-shadow: none; border: 1px solid var(--light-grey); }
+    .summary-eyebrow, .summary-total .label { color: var(--green-dark); }
+    .summary-title, .summary-total .amt, .summary-row .amt { color: var(--dark); }
+    .summary-row .label { color: var(--text-grey); }
+    .summary-row { border-color: var(--light-grey); }
+    .summary-total { border-color: var(--green-dark); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <img src="https://res.cloudinary.com/dxkpbjicu/image/upload/v1774556178/HANDS_Logo_BlackBG_HiRes_qtkac8.png" alt="HANDS Logistics" />
+    <div class="divider"></div>
+    <span class="sub">Storage Rate Card</span>
+  </div>
+  <div class="nav-actions">
+    <button class="btn btn-ghost" onclick="resetAll()">Reset</button>
+    <button class="btn" onclick="openEmailModal()">Send as Quote</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Warehouse Storage — Las Vegas</div>
+    <h1 class="hero-headline">Transparent <em>storage pricing</em>, built for brand operators.</h1>
+    <p class="hero-body">Racked pallet positions, bulk floor space for carts, bikes, and photo walls, and short-term overflow — all under one roof, priced consistently. Long-term storage is billed quarterly in advance. Build your quote below and we'll have it to you the same day.</p>
+  </div>
+</section>
+
+<main>
+  <!-- BUILDER -->
+  <div class="builder">
+
+    <!-- CLIENT DETAILS -->
+    <div class="client-card">
+      <div class="section-eyebrow">Step 01 — Client</div>
+      <div class="section-title">Who is this quote for?</div>
+      <div class="field-grid">
+        <div class="field">
+          <label for="clientName">Client / Company</label>
+          <input id="clientName" type="text" placeholder="e.g. Next Wave Beverages" />
+        </div>
+        <div class="field">
+          <label for="clientContact">Contact Name</label>
+          <input id="clientContact" type="text" placeholder="e.g. Sarah Lane" />
+        </div>
+        <div class="field">
+          <label for="clientEmail">Contact Email</label>
+          <input id="clientEmail" type="email" placeholder="name@company.com" />
+        </div>
+        <div class="field">
+          <label for="quoteDate">Quote Date</label>
+          <input id="quoteDate" type="date" />
+        </div>
+      </div>
+    </div>
+
+    <!-- LINE ITEMS -->
+    <div class="items-card">
+      <div class="items-header">
+        <div>
+          <div class="section-eyebrow">Step 02 — Storage</div>
+          <div class="section-title">Build the package</div>
+        </div>
+      </div>
+
+      <div class="add-bar">
+        <div class="field">
+          <label for="itemType">Storage Type</label>
+          <select id="itemType">
+            <optgroup label="Rack Storage">
+              <option value="bay">Full Bay — 12 pallets</option>
+              <option value="pallet">Standard Pallet Position</option>
+              <option value="overstock">Overstock Pallet (top deck)</option>
+            </optgroup>
+            <optgroup label="Bulk Floor Storage">
+              <option value="bulk_std">Standard Bulk (carts, bikes, crated)</option>
+              <option value="bulk_prem">Oversize/Irregular Bulk (photo walls, build-outs)</option>
+            </optgroup>
+            <optgroup label="Short-term (1 week minimum)">
+              <option value="st_pallet">Short-term Pallet (weekly rate)</option>
+              <option value="st_bulk">Short-term Bulk (weekly rate)</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="field">
+          <label for="itemQty"><span id="qtyLabel">Quantity (pallets)</span></label>
+          <input id="itemQty" type="number" min="1" step="1" value="1" />
+        </div>
+        <button class="btn" onclick="addItem()">Add +</button>
+      </div>
+
+      <div class="items-list" id="itemsList">
+        <div class="empty-state">No items added yet — start by selecting a storage type above.</div>
+      </div>
+    </div>
+
+    <!-- NOTES -->
+    <div class="notes-card">
+      <div class="section-eyebrow">Step 03 — Custom Notes</div>
+      <div class="section-title" style="font-size: 22px;">Anything specific for this client?</div>
+      <div class="field full" style="margin-top: 20px;">
+        <label for="customNotes">Custom terms, delivery arrangements, client-specific notes</label>
+        <textarea id="customNotes" rows="4" placeholder="e.g. Access weekdays 8am–5pm. Pickup appointments require 24hr notice. Month-to-month with 30-day notice to cancel."></textarea>
+      </div>
+    </div>
+
+    <!-- REFERENCE TABLE -->
+    <div class="ref-card">
+      <div class="ref-title">Published rates</div>
+      <table class="ref-table">
+        <thead>
+          <tr><th>Tier</th><th>Description</th><th>Rate</th></tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="3" class="ref-group">Rack Storage</td></tr>
+          <tr><td>Full Bay</td><td>12 pallets, incl. overstock deck</td><td class="rate">$460/mo</td></tr>
+          <tr><td>Standard Pallet</td><td>Floor or beam level, shared bay</td><td class="rate">$45/mo</td></tr>
+          <tr><td>Overstock Pallet</td><td>Top deck only, less frequent access</td><td class="rate">$35/mo</td></tr>
+          <tr><td colspan="3" class="ref-group">Bulk Floor Storage</td></tr>
+          <tr><td>Standard Bulk</td><td>Carts, bikes, crated gear</td><td class="rate">$10/sqft/mo</td></tr>
+          <tr><td>Oversize/Irregular</td><td>Photo walls, build-outs, displays >6ft</td><td class="rate">$12/sqft/mo</td></tr>
+          <tr><td colspan="3" class="ref-group">Short-term (1 week minimum)</td></tr>
+          <tr><td>Pallet (weekly)</td><td>Transient / overflow</td><td class="rate">$35/pallet/week</td></tr>
+          <tr><td>Bulk (weekly)</td><td>Event overflow, staging</td><td class="rate">$3.50/sqft/week</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 3PL SERVICES (context for clients) -->
+    <div class="services-card">
+      <div class="section-eyebrow">Beyond Storage</div>
+      <div class="ref-title">Full-service <em>3PL</em> & concierge logistics</div>
+      <p class="services-intro">Storage is the anchor. We run the full operation end-to-end so brand teams don't have to stitch vendors together — assembly, activation build-outs, day-of delivery, inbound/outbound shipping, and white-glove handling for anything that can't get damaged in transit.</p>
+
+      <div class="services-grid">
+        <div class="service-tile">
+          <div class="sv-num">01 — Assembly</div>
+          <div class="sv-name">On-site build & breakdown</div>
+          <div class="sv-desc">Photo walls, displays, activation kits, bike fleets, rolling racks — assembled in our warehouse or at your venue.</div>
+        </div>
+        <div class="service-tile">
+          <div class="sv-num">02 — Delivery</div>
+          <div class="sv-name">White-glove last mile</div>
+          <div class="sv-desc">Dedicated driver, appointment delivery, inside placement, setup confirmation. POD photo capture on every drop.</div>
+        </div>
+        <div class="service-tile">
+          <div class="sv-num">03 — I/O Shipping</div>
+          <div class="sv-name">Inbound & outbound</div>
+          <div class="sv-desc">Receiving, inspection, labeling, and outbound to venues, stores, or partner warehouses. Freight-ready.</div>
+        </div>
+        <div class="service-tile">
+          <div class="sv-num">04 — Concierge</div>
+          <div class="sv-name">Account ownership</div>
+          <div class="sv-desc">A single point of contact who knows your program. Proactive inventory checks, scheduling, and exception handling.</div>
+        </div>
+      </div>
+
+      <div class="labor-callout">
+        <strong>Note on labor</strong>
+        Storage rates cover the space only. Handling labor — loading, unloading, pick-and-pack, assembly, delivery, and concierge service — is quoted separately based on scope. We'll build a labor estimate alongside this quote whenever you need one.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SUMMARY (sticky) -->
+  <aside class="summary-wrap">
+    <div class="summary">
+      <div class="summary-eyebrow">Your Quote</div>
+      <div class="summary-title">Monthly <em>storage</em> investment</div>
+
+      <div class="summary-list" id="summaryList">
+        <div class="summary-row"><span class="label">No items yet</span><span class="amt">—</span></div>
+      </div>
+
+      <div class="summary-total">
+        <span class="label">Monthly Total</span>
+        <span class="amt" id="summaryTotal">$0</span>
+      </div>
+
+      <div class="summary-quarterly" id="summaryQuarterly">
+        <span class="label">Quarterly invoice</span>
+        <span class="amt" id="summaryQuarterlyAmt">$0</span>
+      </div>
+
+      <div class="summary-minimum hidden" id="minimumWarning">
+        Minimum commitment is $850/mo ($2,550/quarter). Add more storage, or we can tailor a package to hit the threshold together.
+      </div>
+
+      <div class="summary-note">
+        Long-term storage is billed quarterly in advance. Storage covers space only — assembly, delivery, and other 3PL services are quoted separately. 30-day notice to cancel at quarter-end. Facility access M–F 8am–5pm; after-hours by appointment.
+      </div>
+
+      <div class="summary-actions">
+        <button class="btn btn-green" onclick="openEmailModal()">Send to Client</button>
+        <button class="btn btn-outline" onclick="window.print()">Download / Print</button>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<!-- EMAIL MODAL -->
+<div class="modal-backdrop" id="emailModal" onclick="if(event.target===this) closeEmailModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Send Quote to Client</h3>
+      <button class="modal-close" onclick="closeEmailModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label for="emailTo">Recipient Email</label>
+        <input id="emailTo" type="email" placeholder="name@company.com" />
+      </div>
+      <div class="field">
+        <label for="emailSubject">Subject</label>
+        <input id="emailSubject" type="text" />
+      </div>
+      <div class="field">
+        <label for="emailIntro">Personal Intro (optional)</label>
+        <textarea id="emailIntro" rows="3" placeholder="Hi Sarah, great speaking earlier. As discussed, here's the storage quote for the Q2 activation overflow..."></textarea>
+      </div>
+      <div class="field">
+        <label>Preview</label>
+        <div class="email-preview" id="emailPreview"></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="copyEmail()">Copy</button>
+      <button class="btn btn-ghost" onclick="sendViaGmail()">Open in Gmail</button>
+      <button class="btn" onclick="sendViaResend()" id="resendBtn">Send via Resend</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="https://res.cloudinary.com/dxkpbjicu/image/upload/v1774556178/HANDS_Logo_BlackBG_HiRes_qtkac8.png" alt="HANDS Logistics" />
+    </div>
+    <div class="footer-meta">Las Vegas, NV · estimateshands.netlify.app</div>
+  </div>
+</footer>
+
+<script>
+  // ── RATE CARD ──
+  const RATES = {
+    bay:        { name: "Full Bay (12 pallets)",        unit: "bay",    price: 460,  unitLabel: "Bays",        qtyLabel: "Quantity (bays)" },
+    pallet:     { name: "Standard Pallet Position",     unit: "pallet", price: 45,   unitLabel: "Pallets",     qtyLabel: "Quantity (pallets)" },
+    overstock:  { name: "Overstock Pallet (top deck)",  unit: "pallet", price: 35,   unitLabel: "Pallets",     qtyLabel: "Quantity (pallets)" },
+    bulk_std:   { name: "Standard Bulk Floor",          unit: "sqft",   price: 10,   unitLabel: "Sqft",        qtyLabel: "Quantity (sqft)" },
+    bulk_prem:  { name: "Oversize/Irregular Bulk",      unit: "sqft",   price: 12,   unitLabel: "Sqft",        qtyLabel: "Quantity (sqft)" },
+    st_pallet:  { name: "Short-term Pallet",            unit: "pallet-weeks", price: 35,   unitLabel: "Pallet-weeks", qtyLabel: "Pallet-weeks (pallets × weeks, 1 week minimum)" },
+    st_bulk:    { name: "Short-term Bulk",              unit: "sqft-weeks",   price: 3.50, unitLabel: "Sqft-weeks",   qtyLabel: "Sqft-weeks (sqft × weeks, 1 week minimum)" }
+  };
+  const MINIMUM = 850;
+
+  let items = [];
+
+  // ── INIT ──
+  document.addEventListener("DOMContentLoaded", () => {
+    const today = new Date();
+    document.getElementById("quoteDate").value = today.toISOString().split("T")[0];
+    document.getElementById("itemType").addEventListener("change", updateQtyLabel);
+    updateQtyLabel();
+    render();
+  });
+
+  function updateQtyLabel() {
+    const type = document.getElementById("itemType").value;
+    document.getElementById("qtyLabel").textContent = RATES[type].qtyLabel;
+  }
+
+  // ── LINE ITEMS ──
+  function addItem() {
+    const type = document.getElementById("itemType").value;
+    const qtyInput = document.getElementById("itemQty");
+    const qty = parseFloat(qtyInput.value);
+    if (!qty || qty <= 0) { showToast("Enter a valid quantity"); return; }
+
+    items.push({
+      id: Date.now() + Math.random(),
+      type,
+      qty,
+      rate: RATES[type].price,
+      name: RATES[type].name,
+      unit: RATES[type].unit
+    });
+    qtyInput.value = 1;
+    render();
+  }
+
+  function removeItem(id) {
+    items = items.filter(i => i.id !== id);
+    render();
+  }
+
+  function updateItemQty(id, newQty) {
+    const q = parseFloat(newQty);
+    if (!q || q <= 0) return;
+    const item = items.find(i => i.id === id);
+    if (item) { item.qty = q; render(); }
+  }
+
+  // ── TOTALS ──
+  function calcTotals() {
+    let monthly = 0, oneTime = 0;
+    for (const it of items) {
+      const line = it.qty * it.rate;
+      if (it.unit === "pallet-weeks" || it.unit === "sqft-weeks") oneTime += line;
+      else monthly += line;
+    }
+    return { monthly, oneTime, total: monthly + oneTime };
+  }
+
+  function fmt(n) {
+    return "$" + n.toLocaleString("en-US", { minimumFractionDigits: (n % 1 ? 2 : 0), maximumFractionDigits: 2 });
+  }
+
+  // ── RENDER ──
+  function render() {
+    const list = document.getElementById("itemsList");
+    const summary = document.getElementById("summaryList");
+
+    if (items.length === 0) {
+      list.innerHTML = '<div class="empty-state">No items added yet — start by selecting a storage type above.</div>';
+      summary.innerHTML = '<div class="summary-row"><span class="label">No items yet</span><span class="amt">—</span></div>';
+      document.getElementById("summaryTotal").textContent = "$0";
+      document.getElementById("summaryQuarterlyAmt").textContent = "$0";
+      checkMinimum(0);
+      return;
+    }
+
+    // Line items
+    list.innerHTML = items.map(it => {
+      const line = it.qty * it.rate;
+      const isWeekly = it.unit.includes("weeks");
+      const metaLabel = isWeekly
+        ? (it.unit === "pallet-weeks" ? "pallet/week" : "sqft/week")
+        : it.unit;
+      return `
+        <div class="item-row">
+          <div class="item-info">
+            <div class="name">${it.name}</div>
+            <div class="meta">${fmt(it.rate)}/${metaLabel}${isWeekly ? " · 1 week min" : ""}</div>
+          </div>
+          <div class="item-qty">
+            <input type="number" min="1" step="1" value="${it.qty}" onchange="updateItemQty(${it.id}, this.value)" />
+          </div>
+          <div class="item-line">${fmt(line)}</div>
+          <button class="item-remove" onclick="removeItem(${it.id})" title="Remove">&times;</button>
+        </div>
+      `;
+    }).join("");
+
+    // Summary
+    const { monthly, oneTime, total } = calcTotals();
+    const rows = items.map(it => {
+      const line = it.qty * it.rate;
+      const isWeekly = it.unit.includes("weeks");
+      const suffix = isWeekly ? " (short-term)" : "/mo";
+      return `
+        <div class="summary-row">
+          <span class="label">${it.qty} × ${it.name}${suffix}</span>
+          <span class="amt">${fmt(line)}</span>
+        </div>`;
+    }).join("");
+    summary.innerHTML = rows;
+
+    document.getElementById("summaryTotal").textContent = fmt(total);
+    document.getElementById("summaryQuarterlyAmt").textContent = fmt(monthly * 3);
+    checkMinimum(monthly);
+  }
+
+  function checkMinimum(monthly) {
+    const warn = document.getElementById("minimumWarning");
+    if (items.length > 0 && monthly < MINIMUM) warn.classList.remove("hidden");
+    else warn.classList.add("hidden");
+  }
+
+  // ── RESET ──
+  function resetAll() {
+    if (items.length > 0 && !confirm("Clear all items and client info?")) return;
+    items = [];
+    ["clientName","clientContact","clientEmail","customNotes"].forEach(id => document.getElementById(id).value = "");
+    render();
+    showToast("Quote reset");
+  }
+
+  // ── EMAIL ──
+  function buildEmailBody() {
+    const client = document.getElementById("clientName").value.trim();
+    const contact = document.getElementById("clientContact").value.trim();
+    const date = document.getElementById("quoteDate").value;
+    const notes = document.getElementById("customNotes").value.trim();
+    const intro = document.getElementById("emailIntro").value.trim();
+    const { monthly, oneTime, total } = calcTotals();
+
+    // Greeting uses first name if we have one
+    const firstName = contact ? contact.split(" ")[0] : (client || "");
+    const greeting = firstName ? `Hi ${firstName},` : `Hello,`;
+
+    // Human-readable line items — consolidate and narrate rather than list raw SKUs
+    const summarized = summarizeItemsForClient(items);
+
+    // Format monthly total cleanly — this is the headline number
+    const headline = monthly > 0 ? fmt(monthly) + "/month" : (oneTime > 0 ? fmt(oneTime) + " (short-term)" : "$0");
+
+    const introBlock = intro
+      ? intro
+      : `Thanks for reaching out. Here's the storage package we put together for you.`;
+
+    const dateLine = date ? formatDateReadable(date) : "";
+    const quoteRef = (client ? client.replace(/[^a-zA-Z0-9]/g, "").substring(0, 6).toUpperCase() : "QUOTE") + "-" + (date ? date.replace(/-/g, "").substring(2) : "");
+
+    // Build the quote body
+    let body = `${greeting}\n\n${introBlock}\n\n`;
+    body += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    body += `  STORAGE QUOTE\n`;
+    if (client) body += `  Prepared for: ${client}\n`;
+    if (dateLine) body += `  Date: ${dateLine}\n`;
+    body += `  Reference: ${quoteRef}\n`;
+    body += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+
+    body += `YOUR PACKAGE\n`;
+    body += summarized + `\n\n`;
+
+    if (monthly > 0 && oneTime > 0) {
+      body += `INVESTMENT\n`;
+      body += `  Monthly recurring ............ ${fmt(monthly)}\n`;
+      body += `  Quarterly invoice ............ ${fmt(monthly * 3)}\n`;
+      body += `  Short-term (1 week min) ...... ${fmt(oneTime)}\n\n`;
+    } else if (monthly > 0) {
+      body += `INVESTMENT\n`;
+      body += `  ${fmt(monthly)} per month\n`;
+      body += `  ${fmt(monthly * 3)} billed quarterly in advance\n\n`;
+    } else if (oneTime > 0) {
+      body += `INVESTMENT\n`;
+      body += `  ${fmt(oneTime)} (short-term, 1 week minimum)\n\n`;
+    }
+
+    body += `INCLUDED\n`;
+    body += `  Clean, monitored warehouse space\n`;
+    body += `  Climate-stable environment\n`;
+    body += `  Standard facility access, M-F 8am-5pm\n`;
+    body += `  Quarterly billing in advance, 30-day notice to cancel at quarter-end\n\n`;
+
+    body += `AVAILABLE AS ADD-ONS\n`;
+    body += `  HANDS is a full-service 3PL. We handle the labor,\n`;
+    body += `  so your team doesn't have to:\n`;
+    body += `    — Assembly & build-out (photo walls, displays, kits)\n`;
+    body += `    — White-glove delivery with POD photo confirmation\n`;
+    body += `    — Inbound / outbound freight handling\n`;
+    body += `    — Dedicated account manager\n`;
+    body += `  Just let us know what you need and we'll quote alongside.\n\n`;
+
+    if (notes) {
+      body += `NOTES FOR THIS QUOTE\n`;
+      body += `  ${notes.split("\n").join("\n  ")}\n\n`;
+    }
+
+    body += `NEXT STEP\n`;
+    body += `  Reply with a good time for a quick call, or just say\n`;
+    body += `  "let's go" and we'll get you set up this week.\n\n`;
+
+    body += `Best,\n`;
+    body += `HANDS Logistics\n`;
+    body += `Las Vegas, NV\n`;
+
+    return body;
+  }
+
+  // Convert raw line items into human-readable narration for the client
+  function summarizeItemsForClient(items) {
+    if (items.length === 0) return "  (no items)";
+
+    // Group by category
+    const rack = items.filter(i => ["bay","pallet","overstock"].includes(i.type));
+    const bulk = items.filter(i => ["bulk_std","bulk_prem"].includes(i.type));
+    const shortTerm = items.filter(i => ["st_pallet","st_bulk"].includes(i.type));
+
+    const lines = [];
+
+    // Rack: describe as total pallet capacity when possible
+    if (rack.length > 0) {
+      const bays = rack.filter(i => i.type === "bay").reduce((s,i) => s + i.qty, 0);
+      const pallets = rack.filter(i => i.type === "pallet").reduce((s,i) => s + i.qty, 0);
+      const overstock = rack.filter(i => i.type === "overstock").reduce((s,i) => s + i.qty, 0);
+
+      const parts = [];
+      if (bays > 0) {
+        const totalPallets = bays * 12;
+        parts.push(`${bays} full bay${bays>1?'s':''} (${totalPallets} pallet positions)`);
+      }
+      if (pallets > 0) parts.push(`${pallets} pallet position${pallets>1?'s':''}`);
+      if (overstock > 0) parts.push(`${overstock} overstock pallet${overstock>1?'s':''}`);
+
+      if (parts.length > 0) {
+        lines.push(`  • Racked storage: ${parts.join(", ")}`);
+      }
+    }
+
+    // Bulk: sum sqft, distinguish standard vs premium
+    if (bulk.length > 0) {
+      const stdSqft = bulk.filter(i => i.type === "bulk_std").reduce((s,i) => s + i.qty, 0);
+      const premSqft = bulk.filter(i => i.type === "bulk_prem").reduce((s,i) => s + i.qty, 0);
+
+      if (stdSqft > 0) lines.push(`  • Bulk floor space: ${stdSqft} sqft (standard — carts, bikes, crated gear)`);
+      if (premSqft > 0) lines.push(`  • Oversize bulk space: ${premSqft} sqft (photo walls, build-outs, large displays)`);
+    }
+
+    // Short-term: describe clearly
+    if (shortTerm.length > 0) {
+      const palletWeeks = shortTerm.filter(i => i.type === "st_pallet").reduce((s,i) => s + i.qty, 0);
+      const sqftWeeks = shortTerm.filter(i => i.type === "st_bulk").reduce((s,i) => s + i.qty, 0);
+
+      if (palletWeeks > 0) lines.push(`  • Short-term racked: ${palletWeeks} pallet-week${palletWeeks>1?'s':''} (1 week minimum)`);
+      if (sqftWeeks > 0) lines.push(`  • Short-term bulk: ${sqftWeeks} sqft-week${sqftWeeks>1?'s':''} (1 week minimum)`);
+    }
+
+    return lines.join("\n");
+  }
+
+  function formatDateReadable(isoDate) {
+    try {
+      const d = new Date(isoDate + "T12:00:00");
+      return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+    } catch(e) {
+      return isoDate;
+    }
+  }
+
+  function buildEmailSubject() {
+    const client = document.getElementById("clientName").value.trim();
+    return client
+      ? `Storage Quote — HANDS Logistics — ${client}`
+      : `Storage Quote — HANDS Logistics`;
+  }
+
+  function openEmailModal() {
+    if (items.length === 0) { showToast("Add at least one item first"); return; }
+    const { monthly } = calcTotals();
+    if (monthly < MINIMUM) {
+      if (!confirm(`This quote is below the $${MINIMUM}/mo minimum. Send anyway?`)) return;
+    }
+    document.getElementById("emailTo").value = document.getElementById("clientEmail").value;
+    document.getElementById("emailSubject").value = buildEmailSubject();
+    refreshPreview();
+    document.getElementById("emailModal").classList.add("open");
+    // Live preview updates
+    document.getElementById("emailIntro").oninput = refreshPreview;
+    document.getElementById("emailSubject").oninput = refreshPreview;
+  }
+
+  function refreshPreview() {
+    document.getElementById("emailPreview").textContent = buildEmailBody();
+  }
+
+  function closeEmailModal() {
+    document.getElementById("emailModal").classList.remove("open");
+  }
+
+  function sendViaGmail() {
+    const to = document.getElementById("emailTo").value.trim();
+    const subject = document.getElementById("emailSubject").value.trim();
+    const body = buildEmailBody();
+    const url = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    // Also copy body as backup
+    navigator.clipboard.writeText(body).catch(()=>{});
+    window.open(url, "_blank");
+    closeEmailModal();
+    showToast("Opening Gmail — body copied to clipboard as backup");
+  }
+
+  async function sendViaResend() {
+    const to = document.getElementById("emailTo").value.trim();
+    const subject = document.getElementById("emailSubject").value.trim();
+    const body = buildEmailBody();
+    const btn = document.getElementById("resendBtn");
+
+    if (!to || !to.includes("@")) {
+      showToast("Enter a valid recipient email");
+      return;
+    }
+
+    // Disable button + show sending state
+    const originalText = btn.textContent;
+    btn.textContent = "Sending…";
+    btn.disabled = true;
+    btn.style.opacity = "0.6";
+    btn.style.cursor = "wait";
+
+    try {
+      const response = await fetch("/.netlify/functions/send-quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ to, subject, body })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || `Server returned ${response.status}`);
+      }
+
+      closeEmailModal();
+      showToast(`✓ Quote sent to ${to}`);
+    } catch (err) {
+      console.error("Resend failed:", err);
+      showToast(`Send failed — ${err.message}. Try Gmail instead.`);
+      btn.textContent = originalText;
+      btn.disabled = false;
+      btn.style.opacity = "1";
+      btn.style.cursor = "pointer";
+    }
+  }
+
+  function copyEmail() {
+    const subject = document.getElementById("emailSubject").value.trim();
+    const body = buildEmailBody();
+    const full = `Subject: ${subject}\n\n${body}`;
+    navigator.clipboard.writeText(full).then(
+      () => showToast("Copied — paste into any email client"),
+      () => showToast("Copy failed — select manually")
+    );
+  }
+
+  // ── TOAST ──
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove("show"), 2800);
+  }
+</script>
+</body>
+</html>
