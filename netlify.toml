@@ -5,3 +5,16 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+  included_files = ["netlify/functions/**"]
+
+# Pretty URL for proposals: /proposal/slug → /proposal.html?slug=slug
+[[redirects]]
+  from = "/proposal/*"
+  to = "/proposal.html?slug=:splat"
+  status = 200
+
+# Admin alias
+[[redirects]]
+  from = "/admin"
+  to = "/admin.html"
+  status = 200
