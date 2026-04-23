@@ -3,84 +3,1422 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>HANDS Logistics — Las Vegas</title>
+<title>HANDS Logistics — Proposal Tool</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="/brand.css" />
+<style>
+  /* ═══════════════════════════════════════════════════════════════
+     HANDS Logistics — Brand System
+  ═══════════════════════════════════════════════════════════════ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --white: #ffffff;
+    --off-white: #f8f7f4;
+    --light-grey: #efefed;
+    --mid-grey: #c8c8c4;
+    --text-grey: #7a7a76;
+    --dark: #111110;
+    --green: #a0d6b4;
+    --green-dark: #6dba96;
+    --red: #c94a4a;
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--off-white);
+    color: var(--dark);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px; height: 72px;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--light-grey);
+  }
+  .nav-brand { display: flex; align-items: center; gap: 16px; }
+  .nav-brand img { height: 44px; width: auto; display: block; }
+  .nav-brand .divider { width: 1px; height: 24px; background: var(--light-grey); }
+  .nav-brand .sub {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--text-grey);
+  }
+  .nav-actions { display: flex; gap: 40px; align-items: center; }
+  .nav-link {
+    font-family: var(--font-body); font-size: 13px; font-weight: 400;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--dark);
+    text-decoration: none; position: relative; cursor: pointer;
+    background: transparent; border: none; padding: 0;
+    transition: color 0.2s;
+  }
+  .nav-link:hover { color: var(--green-dark); }
+
+  /* ── BUTTONS ── */
+  .btn-primary {
+    background: var(--dark); color: var(--white);
+    padding: 16px 36px; border-radius: 2px; border: none;
+    font-family: var(--font-body); font-size: 13px; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    text-decoration: none; cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover:not(:disabled) { background: var(--green-dark); transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.6; cursor: wait; }
+  .btn-secondary {
+    background: transparent; color: var(--dark);
+    padding: 16px 36px; border-radius: 2px;
+    border: 1px solid var(--mid-grey);
+    font-family: var(--font-body); font-size: 13px; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-secondary:hover { background: var(--dark); color: var(--white); border-color: var(--dark); }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--dark); color: var(--white);
+    padding: 96px 80px 64px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content:''; position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(109,186,150,0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 70%, rgba(160,214,180,0.08) 0%, transparent 55%);
+    pointer-events: none;
+  }
+  .hero-inner { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; }
+  .hero-eyebrow {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--green); margin-bottom: 20px;
+  }
+  .hero-headline {
+    font-family: var(--font-display);
+    font-size: clamp(42px, 5vw, 72px); font-weight: 300; line-height: 1.05;
+    letter-spacing: -0.01em; margin-bottom: 24px; max-width: 900px;
+    color: var(--white);
+  }
+  .hero-headline em { font-style: italic; color: var(--green-dark); }
+  .hero-body {
+    font-size: 17px; font-weight: 300;
+    color: rgba(255,255,255,0.7); line-height: 1.75;
+    max-width: 640px;
+  }
+
+  /* ── MARQUEE ── */
+  .marquee-strip { background: var(--green); padding: 18px 0; overflow: hidden; white-space: nowrap; }
+  .marquee-inner { display: inline-flex; animation: marquee 22s linear infinite; }
+  .marquee-item {
+    font-family: var(--font-display); font-size: 18px; font-weight: 300;
+    font-style: italic; letter-spacing: 0.04em; color: var(--dark);
+    padding: 0 48px;
+  }
+  .marquee-dot {
+    display: inline-block; width: 4px; height: 4px; border-radius: 50%;
+    background: var(--dark); opacity: 0.4; vertical-align: middle;
+  }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ── MAIN ── */
+  main { max-width: 1400px; margin: 0 auto; padding: 80px 80px; }
+
+  .section-eyebrow {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--green-dark); margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: var(--font-display); font-size: 32px; font-weight: 400;
+    line-height: 1.15; margin-bottom: 8px;
+  }
+  .section-sub {
+    font-size: 14px; font-weight: 300; color: var(--text-grey);
+    margin-bottom: 28px;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--white);
+    padding: 28px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.12);
+    margin-bottom: 24px;
+  }
+
+  /* ── FORM FIELDS ── */
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .field label {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--text-grey);
+  }
+  .field input, .field textarea, .field select {
+    font-family: var(--font-body); font-size: 14px; color: var(--dark);
+    background: var(--off-white); border: 1px solid var(--light-grey);
+    padding: 12px 14px; border-radius: 2px; outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus {
+    border-color: var(--green-dark); background: var(--white);
+  }
+  .field textarea { resize: vertical; min-height: 80px; font-family: var(--font-body); }
+  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--dark); color: rgba(255,255,255,0.55);
+    padding: 56px 80px 36px;
+  }
+  .footer-inner {
+    max-width: 1400px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 24px;
+  }
+  .footer-brand { display: flex; align-items: center; gap: 14px; }
+  .footer-brand img { height: 44px; width: auto; filter: brightness(0) invert(1); }
+  .footer-meta {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: rgba(255,255,255,0.3);
+  }
+
+  /* ═════════════════════════════════════════════════════════════
+     LOGIN GATE
+  ═════════════════════════════════════════════════════════════ */
+  .login-wrap {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 48px 24px;
+  }
+  .login-card {
+    background: var(--white);
+    padding: 48px; max-width: 440px; width: 100%;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.12);
+    border-left: 2px solid var(--green);
+  }
+  .login-card .section-title { font-size: 28px; }
+  .login-card .field { margin-bottom: 24px; }
+
+  /* ═════════════════════════════════════════════════════════════
+     ADMIN + PROPOSAL BUILDERS
+  ═════════════════════════════════════════════════════════════ */
+  .mode-badge {
+    display: inline-block;
+    padding: 4px 10px; border-radius: 2px;
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .mode-badge.admin { background: var(--dark); color: var(--green); }
+  .mode-badge.proposal { background: var(--green); color: var(--dark); }
+
+  .link-banner {
+    background: rgba(160,214,180,0.15);
+    border-left: 2px solid var(--green);
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    display: none;
+  }
+  .link-banner.show { display: block; }
+  .link-banner .lb-eyebrow {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--green-dark);
+    margin-bottom: 6px;
+  }
+  .link-banner .lb-url {
+    font-family: var(--font-mono); font-size: 13px; font-weight: 500;
+    word-break: break-all; color: var(--dark);
+    padding: 10px; background: var(--white);
+    border: 1px solid var(--light-grey); border-radius: 2px;
+    margin-top: 8px;
+  }
+  .link-banner .lb-actions {
+    display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap;
+  }
+
+  .builder-card { background: var(--white); padding: 0; box-shadow: 0 2px 20px rgba(0,0,0,0.12); margin-bottom: 24px; }
+  .builder-header {
+    padding: 20px 28px; border-bottom: 1px solid var(--light-grey);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .builder-header h4 {
+    font-family: var(--font-display); font-size: 20px; font-weight: 400;
+  }
+  .add-bar {
+    padding: 16px 28px; background: var(--off-white);
+    display: grid; grid-template-columns: 2fr 1fr auto; gap: 12px;
+    align-items: end; border-bottom: 1px solid var(--light-grey);
+  }
+  .add-bar .field { margin-bottom: 0; }
+  .add-bar .field label { font-size: 9px; }
+  .add-bar select, .add-bar input {
+    font-family: var(--font-body); font-size: 13px;
+    padding: 8px 10px; border: 1px solid var(--light-grey);
+    background: var(--white); border-radius: 2px; outline: none;
+  }
+  .add-bar button {
+    padding: 10px 20px; font-size: 11px;
+  }
+  .items-list { padding: 4px 0; min-height: 60px; }
+  .empty-state {
+    padding: 24px 28px; text-align: center; color: var(--text-grey);
+    font-size: 12px; font-style: italic;
+  }
+  .item-row {
+    display: grid; grid-template-columns: 1fr auto auto auto;
+    align-items: center; gap: 14px;
+    padding: 12px 28px;
+    border-bottom: 1px solid var(--light-grey);
+  }
+  .item-row:last-child { border-bottom: none; }
+  .item-info .name { font-size: 13px; font-weight: 500; }
+  .item-info .meta {
+    font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.08em;
+    color: var(--text-grey); margin-top: 2px; text-transform: uppercase;
+  }
+  .item-qty input {
+    width: 56px; text-align: center;
+    font-family: var(--font-mono); font-size: 12px;
+    padding: 4px 6px; border: 1px solid var(--light-grey); border-radius: 2px;
+  }
+  .item-line {
+    font-family: var(--font-mono); font-size: 13px; font-weight: 500;
+    min-width: 80px; text-align: right;
+  }
+  .item-remove {
+    background: transparent; border: none; cursor: pointer;
+    color: var(--mid-grey); font-size: 16px; padding: 2px 6px;
+  }
+  .item-remove:hover { color: var(--red); }
+
+  /* ── TOTALS / SUMMARY ── */
+  .totals-card {
+    background: var(--dark); color: var(--white);
+    padding: 28px 32px; margin-bottom: 24px;
+  }
+  .totals-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 13px;
+  }
+  .totals-row:last-child { border-bottom: none; padding-top: 16px; }
+  .totals-row .label { color: rgba(255,255,255,0.7); }
+  .totals-row .amt { font-family: var(--font-mono); }
+  .totals-grand {
+    border-top: 2px solid var(--green) !important;
+    padding-top: 16px !important;
+    margin-top: 8px;
+  }
+  .totals-grand .label {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--green);
+  }
+  .totals-grand .amt {
+    font-family: var(--font-display); font-size: 32px; font-weight: 300;
+    color: var(--white);
+  }
+
+  /* ── PROPOSAL VIEW SPECIFIC ── */
+  .prepared-banner {
+    background: var(--green); padding: 20px 48px;
+    text-align: center;
+  }
+  .prepared-eyebrow {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--dark);
+    opacity: 0.6; margin-bottom: 4px;
+  }
+  .prepared-name {
+    font-family: var(--font-display); font-size: 26px; font-weight: 400;
+    font-style: italic; color: var(--dark);
+  }
+
+  .onboarding-section { padding: 80px 80px; background: var(--off-white); }
+  .onboarding-inner { max-width: 860px; margin: 0 auto; }
+  .onboarding-intro {
+    font-family: var(--font-display); font-size: 24px; font-weight: 300;
+    line-height: 1.5; color: var(--dark);
+    margin-bottom: 40px;
+  }
+  .service-block {
+    padding: 24px 0;
+    border-top: 1px solid var(--light-grey);
+    display: grid; grid-template-columns: 120px 1fr; gap: 32px;
+    align-items: start;
+  }
+  .service-block:last-child { border-bottom: 1px solid var(--light-grey); }
+  .service-num {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--green-dark);
+    padding-top: 6px;
+  }
+  .service-title {
+    font-family: var(--font-display); font-size: 22px; font-weight: 400;
+    margin-bottom: 8px;
+  }
+  .service-desc {
+    font-size: 14px; font-weight: 300; color: var(--text-grey);
+    line-height: 1.7; margin-bottom: 8px;
+  }
+  .service-link {
+    font-family: var(--font-mono); font-size: 12px;
+    color: var(--green-dark); text-decoration: none;
+    letter-spacing: 0.05em; word-break: break-all;
+  }
+  .service-link:hover { text-decoration: underline; }
+
+  .notes-callout {
+    background: rgba(160,214,180,0.12); border-left: 2px solid var(--green-dark);
+    padding: 20px 24px; margin-bottom: 24px;
+  }
+  .notes-callout .nc-label {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--green-dark); margin-bottom: 8px;
+  }
+  .notes-callout .nc-body { font-size: 14px; line-height: 1.6; color: var(--dark); white-space: pre-wrap; }
+
+  .accept-section {
+    background: var(--dark); color: var(--white);
+    padding: 64px 80px; text-align: center;
+  }
+  .accept-section .section-title { color: var(--white); font-size: 40px; }
+  .accept-section .section-title em { color: var(--green); font-style: italic; }
+  .accept-section p {
+    color: rgba(255,255,255,0.7); font-size: 15px;
+    max-width: 560px; margin: 0 auto 32px;
+  }
+  .btn-accept {
+    background: var(--green); color: var(--dark);
+    padding: 18px 48px; border-radius: 2px; border: none;
+    font-family: var(--font-body); font-size: 14px; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .btn-accept:hover { background: var(--white); transform: translateY(-1px); }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 32px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--dark); color: var(--white);
+    padding: 14px 24px;
+    font-family: var(--font-mono); font-size: 12px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    opacity: 0; transition: opacity 0.3s, transform 0.3s;
+    z-index: 1100; border-left: 2px solid var(--green);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.error { border-left-color: var(--red); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    nav, main, .hero, footer, .onboarding-section, .accept-section { padding-left: 40px; padding-right: 40px; }
+    .hero { padding-top: 80px; padding-bottom: 56px; }
+    main { padding: 56px 40px; }
+  }
+  @media (max-width: 640px) {
+    nav, main, .hero, footer, .onboarding-section, .accept-section { padding-left: 24px; padding-right: 24px; }
+    .hero { padding: 64px 24px 48px; }
+    main { padding: 48px 24px; }
+    .prepared-banner { padding: 18px 24px; }
+    .prepared-name { font-size: 22px; }
+    .nav-actions { gap: 16px; }
+    .nav-brand .sub { display: none; }
+    .field-grid { grid-template-columns: 1fr; }
+    .add-bar { grid-template-columns: 1fr; }
+    .service-block { grid-template-columns: 1fr; gap: 8px; }
+    .item-row { grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 8px; }
+    .item-line { grid-column: 2; grid-row: 1; }
+    .item-qty { grid-column: 1; grid-row: 2; }
+    .item-remove { grid-column: 2; grid-row: 2; justify-self: end; }
+  }
+
+  @media print {
+    nav, .marquee-strip, footer, .admin-only { display: none !important; }
+    body { background: white; }
+    .card { box-shadow: none; page-break-inside: avoid; }
+  }
+</style>
 </head>
 <body>
 
-<nav>
-  <div class="nav-brand">
-    <img src="https://res.cloudinary.com/dxkpbjicu/image/upload/v1774556178/HANDS_Logo_BlackBG_HiRes_qtkac8.png" alt="HANDS Logistics" />
-    <div class="divider"></div>
-    <span class="sub">Concierge Logistics</span>
-  </div>
-  <div class="nav-actions">
-    <a class="nav-cta" href="mailto:concierge@handslogistics.com">Get in Touch</a>
-  </div>
-</nav>
-
-<section class="hero">
-  <div class="hero-inner">
-    <div class="hero-eyebrow">Brand Activations · White-Glove Delivery · Concierge 3PL</div>
-    <h1 class="hero-headline">We <em>run the operation</em>, so your team runs the brand.</h1>
-    <p class="hero-body">HANDS Logistics is the Las Vegas logistics partner behind leading beverage and lifestyle brands. Warehousing, delivery, assembly, and full-service 3PL — under one roof, under one account manager.</p>
-    <div style="margin-top: 40px;">
-      <a class="btn-primary" href="mailto:concierge@handslogistics.com">Start a Conversation</a>
+<!-- ══════════════════════════════════════════════════════════════════
+     LOGIN GATE (shown when mode=admin and not authenticated)
+══════════════════════════════════════════════════════════════════ -->
+<div id="loginGate" class="login-wrap" style="display:none;">
+  <div class="login-card">
+    <div class="section-eyebrow">HANDS Admin</div>
+    <h2 class="section-title">Enter password</h2>
+    <p class="section-sub">Protected workspace for proposal creation.</p>
+    <div class="field">
+      <label for="passwordInput">Password</label>
+      <input type="password" id="passwordInput" placeholder="••••••••" autocomplete="off" />
     </div>
-  </div>
-</section>
-
-<div class="marquee-strip">
-  <div class="marquee-inner">
-    <span class="marquee-item">Brand Activations</span>
-    <span class="marquee-item"><span class="marquee-dot"></span></span>
-    <span class="marquee-item">White-Glove Delivery</span>
-    <span class="marquee-item"><span class="marquee-dot"></span></span>
-    <span class="marquee-item">Concierge 3PL</span>
-    <span class="marquee-item"><span class="marquee-dot"></span></span>
-    <span class="marquee-item">Las Vegas</span>
-    <span class="marquee-item"><span class="marquee-dot"></span></span>
-    <span class="marquee-item">Warehousing &amp; Storage</span>
-    <span class="marquee-item"><span class="marquee-dot"></span></span>
-    <span class="marquee-item">Assembly &amp; Build-Out</span>
-    <span class="marquee-item"><span class="marquee-dot"></span></span>
-    <span class="marquee-item">Brand Activations</span>
-    <span class="marquee-item"><span class="marquee-dot"></span></span>
-    <span class="marquee-item">White-Glove Delivery</span>
-    <span class="marquee-item"><span class="marquee-dot"></span></span>
-    <span class="marquee-item">Concierge 3PL</span>
-    <span class="marquee-item"><span class="marquee-dot"></span></span>
-    <span class="marquee-item">Las Vegas</span>
-    <span class="marquee-item"><span class="marquee-dot"></span></span>
-    <span class="marquee-item">Warehousing &amp; Storage</span>
-    <span class="marquee-item"><span class="marquee-dot"></span></span>
-    <span class="marquee-item">Assembly &amp; Build-Out</span>
-    <span class="marquee-item"><span class="marquee-dot"></span></span>
+    <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="tryLogin()">Enter</button>
+    <p id="loginError" style="color: var(--red); font-size: 12px; margin-top: 16px; display: none;">Wrong password.</p>
   </div>
 </div>
 
-<main>
-  <div style="text-align: center; max-width: 720px; margin: 0 auto;">
-    <div class="section-eyebrow">Working With HANDS</div>
-    <h2 class="section-title">Proposals are custom-built for each client.</h2>
-    <p class="section-sub" style="font-size: 16px;">If we've sent you a link to a proposal, open it from your email. If you're new here and want to talk logistics, reach out to the concierge team.</p>
-    <div style="margin-top: 32px;">
-      <a class="btn-primary" href="mailto:concierge@handslogistics.com">concierge@handslogistics.com</a>
-    </div>
-  </div>
-</main>
+<!-- ══════════════════════════════════════════════════════════════════
+     ADMIN VIEW — proposal builder
+══════════════════════════════════════════════════════════════════ -->
+<div id="adminView" style="display:none;">
 
-<footer>
-  <div class="footer-inner">
-    <div class="footer-brand">
+  <nav>
+    <div class="nav-brand">
       <img src="https://res.cloudinary.com/dxkpbjicu/image/upload/v1774556178/HANDS_Logo_BlackBG_HiRes_qtkac8.png" alt="HANDS Logistics" />
+      <div class="divider"></div>
+      <span class="sub">Admin</span>
     </div>
-    <div class="footer-meta">Las Vegas, NV · concierge@handslogistics.com</div>
-  </div>
-</footer>
+    <div class="nav-actions">
+      <button class="nav-link" onclick="logoutAdmin()">Log out</button>
+    </div>
+  </nav>
 
+  <main>
+    <div class="mode-badge admin">Admin Workspace</div>
+    <h1 style="font-family: var(--font-display); font-size: 40px; font-weight: 400; margin-bottom: 8px;">Build a proposal</h1>
+    <p class="section-sub" style="font-size: 15px; margin-bottom: 32px;">Fill in the details, generate a shareable link, send to your client.</p>
+
+    <div class="link-banner" id="linkBanner">
+      <div class="lb-eyebrow">Proposal Ready to Share</div>
+      <div style="font-size: 14px; margin-top: 4px;">Copy this link and send it to your client:</div>
+      <div class="lb-url" id="lbUrl"></div>
+      <div class="lb-actions">
+        <button class="btn-secondary" onclick="copyLink()">Copy Link</button>
+        <button class="btn-primary" onclick="openGmail()">Open in Gmail</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-eyebrow">01 — Client Info</div>
+      <h3 class="section-title" style="font-size: 22px;">Who is this proposal for?</h3>
+      <div class="field-grid" style="margin-top: 20px;">
+        <div class="field">
+          <label for="clientName">Company</label>
+          <input id="clientName" type="text" placeholder="e.g. Tito's Vodka" />
+        </div>
+        <div class="field">
+          <label for="clientContact">Contact Name</label>
+          <input id="clientContact" type="text" placeholder="e.g. Sarah Lane" />
+        </div>
+        <div class="field">
+          <label for="clientEmail">Contact Email</label>
+          <input id="clientEmail" type="email" placeholder="name@company.com" />
+        </div>
+        <div class="field">
+          <label for="proposalDate">Proposal Date</label>
+          <input id="proposalDate" type="date" />
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-eyebrow">02 — Custom Intro (optional)</div>
+      <h3 class="section-title" style="font-size: 22px;">Personalize the opening</h3>
+      <p class="section-sub">Leave blank for default. Shows at the top of their proposal page.</p>
+      <div class="field">
+        <textarea id="onboardingIntro" rows="4" placeholder="Thank you for considering HANDS Logistics — we'd love to be the team behind Tito's operations here in Las Vegas..."></textarea>
+      </div>
+    </div>
+
+    <div class="builder-card">
+      <div class="builder-header">
+        <div>
+          <div class="section-eyebrow">03 — Storage</div>
+          <h4>Pre-fill storage package</h4>
+        </div>
+      </div>
+      <div class="add-bar">
+        <div class="field">
+          <label for="storageType">Storage Type</label>
+          <select id="storageType"></select>
+        </div>
+        <div class="field">
+          <label><span id="storageQtyLabel">Quantity</span></label>
+          <input id="storageQty" type="number" min="1" step="1" value="1" />
+        </div>
+        <button class="btn-primary" onclick="addStorageItem()">Add +</button>
+      </div>
+      <div class="items-list" id="storageList">
+        <div class="empty-state">Optional — skip if no storage.</div>
+      </div>
+    </div>
+
+    <div class="builder-card">
+      <div class="builder-header">
+        <div>
+          <div class="section-eyebrow">04 — Delivery</div>
+          <h4>Pre-fill delivery package</h4>
+        </div>
+      </div>
+      <div class="add-bar">
+        <div class="field">
+          <label for="deliveryType">Delivery Type</label>
+          <select id="deliveryType"></select>
+        </div>
+        <div class="field">
+          <label><span id="deliveryQtyLabel">Quantity</span></label>
+          <input id="deliveryQty" type="number" min="1" step="1" value="1" />
+        </div>
+        <button class="btn-primary" onclick="addDeliveryItem()">Add +</button>
+      </div>
+      <div class="items-list" id="deliveryList">
+        <div class="empty-state">Optional — skip if no delivery.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-eyebrow">05 — Notes (optional)</div>
+      <h3 class="section-title" style="font-size: 22px;">Client-specific notes</h3>
+      <div class="field" style="margin-top: 16px;">
+        <textarea id="customNotes" rows="3" placeholder="e.g. Access weekdays 8am-5pm. Event kit needs to ship to Austin by May 12."></textarea>
+      </div>
+    </div>
+
+    <div class="totals-card">
+      <div class="totals-row">
+        <span class="label">Storage (monthly × 3)</span>
+        <span class="amt" id="totStorageMonthly">$0</span>
+      </div>
+      <div class="totals-row">
+        <span class="label">Storage (short-term, 1wk min)</span>
+        <span class="amt" id="totStorageShort">$0</span>
+      </div>
+      <div class="totals-row">
+        <span class="label">Delivery</span>
+        <span class="amt" id="totDelivery">$0</span>
+      </div>
+      <div class="totals-row totals-grand">
+        <span class="label">Quarterly Invoice</span>
+        <span class="amt" id="totQuarterly">$0</span>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+      <button class="btn-primary" onclick="generateProposal()">Generate Proposal Link</button>
+      <button class="btn-secondary" onclick="resetForm()">Clear Form</button>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="https://res.cloudinary.com/dxkpbjicu/image/upload/v1774556178/HANDS_Logo_BlackBG_HiRes_qtkac8.png" alt="HANDS Logistics" />
+      </div>
+      <div class="footer-meta">Admin · hqrates.netlify.app</div>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     PROPOSAL VIEW — client-facing
+══════════════════════════════════════════════════════════════════ -->
+<div id="proposalView" style="display:none;">
+
+  <nav>
+    <div class="nav-brand">
+      <img src="https://res.cloudinary.com/dxkpbjicu/image/upload/v1774556178/HANDS_Logo_BlackBG_HiRes_qtkac8.png" alt="HANDS Logistics" />
+      <div class="divider"></div>
+      <span class="sub">Your Proposal</span>
+    </div>
+    <div class="nav-actions">
+      <a class="nav-link" href="mailto:concierge@handslogistics.com">Contact</a>
+    </div>
+  </nav>
+
+  <div class="prepared-banner">
+    <div class="prepared-eyebrow">Custom Proposal Prepared For</div>
+    <div class="prepared-name" id="preparedName">—</div>
+  </div>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow" id="heroEyebrow">Your HANDS Logistics Proposal</div>
+      <h1 class="hero-headline">A <em>tailored operation</em>, purpose-built for your team.</h1>
+      <p class="hero-body">Below is exactly what working together would look like. Review the preview, explore the package we've put together, and reach out to accept or request changes.</p>
+    </div>
+  </section>
+
+  <div class="marquee-strip">
+    <div class="marquee-inner">
+      <span class="marquee-item">Brand Activations</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">White-Glove Delivery</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Concierge 3PL</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Las Vegas</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Warehousing &amp; Storage</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Assembly &amp; Build-Out</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Brand Activations</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">White-Glove Delivery</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Concierge 3PL</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Las Vegas</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Warehousing &amp; Storage</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Assembly &amp; Build-Out</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+    </div>
+  </div>
+
+  <section class="onboarding-section">
+    <div class="onboarding-inner">
+      <div class="section-eyebrow">What HANDS Looks Like For You</div>
+      <p class="onboarding-intro" id="onboardingIntroText"></p>
+
+      <div class="service-block">
+        <div class="service-num">01 / Delivery Scheduling</div>
+        <div>
+          <div class="service-title">A dedicated portal for your team</div>
+          <div class="service-desc">Submit and track delivery requests on demand — no back-and-forth emails, just a clean interface built for operators.</div>
+          <a class="service-link" href="https://scheduleadelivery.netlify.app/" target="_blank">scheduleadelivery.netlify.app →</a>
+        </div>
+      </div>
+
+      <div class="service-block">
+        <div class="service-num">02 / Brand Activations</div>
+        <div>
+          <div class="service-title">Setup to teardown, handled</div>
+          <div class="service-desc">Venue drops, event build-outs, last-minute activation support. HANDS is on the ground and ready to move.</div>
+        </div>
+      </div>
+
+      <div class="service-block">
+        <div class="service-num">03 / Warehousing</div>
+        <div>
+          <div class="service-title">Inventory, organized and deployable</div>
+          <div class="service-desc">Your POSM, event materials, and displays live in our Las Vegas facility — tracked, staged, and ready to roll out.</div>
+        </div>
+      </div>
+
+      <div class="service-block">
+        <div class="service-num">04 / Inbound Shipments</div>
+        <div>
+          <div class="service-title">Every box received and logged</div>
+          <div class="service-desc">All inbound freight and POSM gets received, inspected, and logged by our team.</div>
+          <a class="service-link" href="mailto:inbound@handslogistics.com">inbound@handslogistics.com →</a>
+        </div>
+      </div>
+
+      <div class="service-block">
+        <div class="service-num">05 / Concierge Team</div>
+        <div>
+          <div class="service-title">A real team, not a ticket system</div>
+          <div class="service-desc">Every client gets direct access to our concierge inbox — a single point of contact who knows your program.</div>
+          <a class="service-link" href="mailto:concierge@handslogistics.com">concierge@handslogistics.com →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <div class="mode-badge proposal">Your Tailored Package</div>
+    <h2 class="section-title" style="font-size: 40px;">The operation we'd run for you.</h2>
+    <p class="section-sub" style="font-size: 15px;">Pre-filled with what we've scoped. You can adjust freely — our rates are our rates, always transparent.</p>
+
+    <div class="notes-callout" id="notesCallout" style="display:none;">
+      <div class="nc-label">A Note On This Proposal</div>
+      <div class="nc-body" id="notesBody"></div>
+    </div>
+
+    <div class="builder-card">
+      <div class="builder-header">
+        <div>
+          <h4>Storage</h4>
+          <div class="section-eyebrow" style="margin-top: 4px; margin-bottom: 0;">Billed quarterly · $850/mo minimum</div>
+        </div>
+      </div>
+      <div class="add-bar">
+        <div class="field">
+          <label for="storageTypeP">Add Storage</label>
+          <select id="storageTypeP"></select>
+        </div>
+        <div class="field">
+          <label><span id="storageQtyLabelP">Quantity</span></label>
+          <input id="storageQtyP" type="number" min="1" step="1" value="1" />
+        </div>
+        <button class="btn-primary" onclick="addStorageItemP()">Add</button>
+      </div>
+      <div class="items-list" id="storageListP"></div>
+    </div>
+
+    <div class="builder-card">
+      <div class="builder-header">
+        <div>
+          <h4>Delivery</h4>
+          <div class="section-eyebrow" style="margin-top: 4px; margin-bottom: 0;">Per-delivery · Las Vegas metro + regional</div>
+        </div>
+      </div>
+      <div class="add-bar">
+        <div class="field">
+          <label for="deliveryTypeP">Add Delivery</label>
+          <select id="deliveryTypeP"></select>
+        </div>
+        <div class="field">
+          <label><span id="deliveryQtyLabelP">Quantity</span></label>
+          <input id="deliveryQtyP" type="number" min="1" step="1" value="1" />
+        </div>
+        <button class="btn-primary" onclick="addDeliveryItemP()">Add</button>
+      </div>
+      <div class="items-list" id="deliveryListP"></div>
+    </div>
+
+    <div style="font-size: 13px; color: var(--text-grey); line-height: 1.75; padding: 16px 0; margin-bottom: 24px;">
+      <strong style="color: var(--dark); font-weight: 500;">Labor note.</strong> Rates above cover space and transportation. Handling labor — loading, unloading, pick-and-pack, assembly, on-site support — is quoted separately based on scope.
+    </div>
+
+    <div class="totals-card">
+      <div class="totals-row">
+        <span class="label">Storage (monthly × 3)</span>
+        <span class="amt" id="totStorageMonthlyP">$0</span>
+      </div>
+      <div class="totals-row">
+        <span class="label">Storage (short-term, 1wk min)</span>
+        <span class="amt" id="totStorageShortP">$0</span>
+      </div>
+      <div class="totals-row">
+        <span class="label">Delivery</span>
+        <span class="amt" id="totDeliveryP">$0</span>
+      </div>
+      <div class="totals-row totals-grand">
+        <span class="label">Quarterly Total</span>
+        <span class="amt" id="totQuarterlyP">$0</span>
+      </div>
+    </div>
+  </main>
+
+  <section class="accept-section">
+    <div style="max-width: 800px; margin: 0 auto;">
+      <div class="section-eyebrow" style="color: var(--green);">Ready to Move Forward?</div>
+      <h2 class="section-title">Let's make it <em>official</em>.</h2>
+      <p>Reach out and we'll confirm the terms, schedule your kickoff date, and get your onboarding started. Questions or adjustments? We're happy to chat.</p>
+      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+        <a class="btn-accept" id="acceptMailto" href="mailto:concierge@handslogistics.com">Accept &amp; Get Started</a>
+        <a class="btn-secondary" id="changesMailto" href="mailto:concierge@handslogistics.com" style="color: var(--white); border-color: rgba(255,255,255,0.25);">Request Changes</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="https://res.cloudinary.com/dxkpbjicu/image/upload/v1774556178/HANDS_Logo_BlackBG_HiRes_qtkac8.png" alt="HANDS Logistics" />
+      </div>
+      <div class="footer-meta">Las Vegas, NV · concierge@handslogistics.com</div>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     LANDING VIEW (shown at root with no params — fallback)
+══════════════════════════════════════════════════════════════════ -->
+<div id="landingView" style="display:none;">
+  <nav>
+    <div class="nav-brand">
+      <img src="https://res.cloudinary.com/dxkpbjicu/image/upload/v1774556178/HANDS_Logo_BlackBG_HiRes_qtkac8.png" alt="HANDS Logistics" />
+      <div class="divider"></div>
+      <span class="sub">Concierge Logistics</span>
+    </div>
+    <div class="nav-actions">
+      <a class="nav-link" href="mailto:concierge@handslogistics.com">Contact</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Brand Activations · White-Glove Delivery · Concierge 3PL</div>
+      <h1 class="hero-headline">We <em>run the operation</em>, so your team runs the brand.</h1>
+      <p class="hero-body">HANDS Logistics is the Las Vegas logistics partner behind leading beverage and lifestyle brands.</p>
+      <div style="margin-top: 40px;">
+        <a class="btn-primary" href="mailto:concierge@handslogistics.com">Start a Conversation</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee-strip">
+    <div class="marquee-inner">
+      <span class="marquee-item">Brand Activations</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">White-Glove Delivery</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Concierge 3PL</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Las Vegas</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Warehousing &amp; Storage</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Brand Activations</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">White-Glove Delivery</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Concierge 3PL</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Las Vegas</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+      <span class="marquee-item">Warehousing &amp; Storage</span>
+      <span class="marquee-item"><span class="marquee-dot"></span></span>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="https://res.cloudinary.com/dxkpbjicu/image/upload/v1774556178/HANDS_Logo_BlackBG_HiRes_qtkac8.png" alt="HANDS Logistics" />
+      </div>
+      <div class="footer-meta">Las Vegas, NV · concierge@handslogistics.com</div>
+    </div>
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   CONFIGURATION
+═══════════════════════════════════════════════════════════════ */
+const ADMIN_PASSWORD = "HANDS2026";
+const AUTH_KEY = "hands_admin_auth";
+
+/* ═══════════════════════════════════════════════════════════════
+   RATES
+═══════════════════════════════════════════════════════════════ */
+const STORAGE_RATES = {
+  bay:       { name: "Full Bay (12 pallets)",       price: 460,  unitShort: "bay",    qtyLabel: "Quantity (bays)" },
+  pallet:    { name: "Standard Pallet Position",    price: 45,   unitShort: "pallet", qtyLabel: "Quantity (pallets)" },
+  overstock: { name: "Overstock Pallet (top deck)", price: 35,   unitShort: "pallet", qtyLabel: "Quantity (pallets)" },
+  bulk_std:  { name: "Standard Bulk Floor",         price: 10,   unitShort: "sqft",   qtyLabel: "Quantity (sqft)" },
+  bulk_prem: { name: "Oversize/Irregular Bulk",     price: 12,   unitShort: "sqft",   qtyLabel: "Quantity (sqft)" },
+  st_pallet: { name: "Short-term Pallet",           price: 35,   unitShort: "pal·wk", qtyLabel: "Pallet-weeks (1wk min)", isShortTerm: true },
+  st_bulk:   { name: "Short-term Bulk",             price: 3.50, unitShort: "sf·wk",  qtyLabel: "Sqft-weeks (1wk min)", isShortTerm: true }
+};
+
+const DELIVERY_RATES = {
+  tier1:      { name: "Tier 1 — Local Single Stop",       price: 95,  type: "tier", unit: "delivery" },
+  tier2:      { name: "Tier 2 — Multi-Stop (2-3)",        price: 185, type: "tier", unit: "delivery" },
+  tier3:      { name: "Tier 3 — Extended Route",          price: 325, type: "tier", unit: "delivery" },
+  tier4:      { name: "Tier 4 — Regional (80-150mi)",     price: 495, type: "tier", unit: "delivery" },
+  tier5:      { name: "Tier 5 — Overnight",               price: 650, type: "tier", unit: "delivery" },
+  pod:        { name: "Photo POD Documentation",          price: 50,  type: "addon", unit: "delivery" },
+  whiteglove: { name: "White Glove Setup",                price: 175, type: "addon", unit: "delivery" },
+  reverse:    { name: "Return / Reverse Logistics",       price: 200, type: "addon", unit: "delivery" },
+  coc:        { name: "Chain of Custody",                 price: 50,  type: "addon", unit: "flat" },
+  rush:       { name: "Rush (<4hr notice)",               percent: 50, type: "surcharge", appliesTo: "tier" },
+  afterhrs:   { name: "After-Hours (6pm-8am)",            percent: 35, type: "surcharge", appliesTo: "tier" },
+  weekend:    { name: "Weekend / Holiday",                percent: 40, type: "surcharge", appliesTo: "tier" },
+  waiting:    { name: "Waiting / Detention",              price: 75,  type: "surcharge", unit: "hour" },
+  extrastop:  { name: "Extra Stop (beyond tier)",         price: 75,  type: "surcharge", unit: "stop" },
+  twoperson:  { name: "Two-Person Crew",                  price: 150, type: "surcharge", unit: "flat" },
+  dock:       { name: "Venue / Load Dock",                price: 100, type: "surcharge", unit: "flat" },
+  mileage:    { name: "Excess Mileage (>60mi)",           price: 0.85, type: "surcharge", unit: "mile" }
+};
+
+function fmt(n) {
+  if (!n) return "$0";
+  return "$" + Number(n).toLocaleString("en-US", {
+    minimumFractionDigits: (n % 1 ? 2 : 0),
+    maximumFractionDigits: 2
+  });
+}
+
+function calcStorageTotals(items) {
+  let monthly = 0, shortTerm = 0;
+  for (const it of items) {
+    const rate = STORAGE_RATES[it.type];
+    if (!rate) continue;
+    const line = it.qty * rate.price;
+    if (rate.isShortTerm) shortTerm += line;
+    else monthly += line;
+  }
+  return { monthly, shortTerm };
+}
+
+function calcDeliveryLine(item, allItems) {
+  const rate = DELIVERY_RATES[item.type];
+  if (!rate) return 0;
+  if (rate.type === "surcharge" && rate.percent) {
+    const tierTotal = allItems
+      .filter(i => DELIVERY_RATES[i.type] && DELIVERY_RATES[i.type].type === "tier")
+      .reduce((sum, i) => sum + (i.qty * DELIVERY_RATES[i.type].price), 0);
+    return tierTotal * (rate.percent / 100) * item.qty;
+  }
+  return (rate.price || 0) * item.qty;
+}
+
+function calcDeliveryTotal(items) {
+  return items.reduce((sum, it) => sum + calcDeliveryLine(it, items), 0);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   URL PROPOSAL ENCODING
+   Proposals are serialized to JSON, base64-encoded, and stored in
+   the URL hash fragment (#p=...). Hash fragments don't get sent
+   to servers, which means they survive Netlify redirects cleanly.
+═══════════════════════════════════════════════════════════════ */
+function encodeProposal(data) {
+  try {
+    const json = JSON.stringify(data);
+    // Use URL-safe base64 (replace +, /, =)
+    return btoa(unescape(encodeURIComponent(json)))
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
+  } catch (e) {
+    console.error("Encode failed:", e);
+    return null;
+  }
+}
+
+function decodeProposal(encoded) {
+  try {
+    // Restore base64 padding and chars
+    let b64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
+    while (b64.length % 4) b64 += '=';
+    const json = decodeURIComponent(escape(atob(b64)));
+    return JSON.parse(json);
+  } catch (e) {
+    console.error("Decode failed:", e);
+    return null;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ROUTER — decide which view to show on page load
+═══════════════════════════════════════════════════════════════ */
+document.addEventListener("DOMContentLoaded", () => {
+  const hash = window.location.hash;
+  const search = window.location.search;
+
+  // Check for proposal in URL hash (#p=...)
+  const hashMatch = hash.match(/[#&]p=([^&]+)/);
+  const searchMatch = search.match(/[?&]p=([^&]+)/);
+  const proposalData = hashMatch ? hashMatch[1] : (searchMatch ? searchMatch[1] : null);
+
+  if (proposalData) {
+    // Client proposal view
+    const decoded = decodeProposal(proposalData);
+    if (decoded) {
+      renderProposalView(decoded);
+      return;
+    }
+  }
+
+  // Check for admin mode (#admin or ?admin)
+  if (hash === "#admin" || search.includes("admin") || window.location.pathname.endsWith("/admin")) {
+    showAdminGateOrView();
+    return;
+  }
+
+  // Default: landing page
+  document.getElementById("landingView").style.display = "block";
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   LOGIN GATE
+═══════════════════════════════════════════════════════════════ */
+function showAdminGateOrView() {
+  const authed = sessionStorage.getItem(AUTH_KEY) === "1";
+  if (authed) {
+    initAdminView();
+  } else {
+    document.getElementById("loginGate").style.display = "flex";
+    document.getElementById("passwordInput").focus();
+    document.getElementById("passwordInput").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") tryLogin();
+    });
+  }
+}
+
+function tryLogin() {
+  const input = document.getElementById("passwordInput").value;
+  if (input === ADMIN_PASSWORD) {
+    sessionStorage.setItem(AUTH_KEY, "1");
+    document.getElementById("loginGate").style.display = "none";
+    initAdminView();
+  } else {
+    document.getElementById("loginError").style.display = "block";
+    document.getElementById("passwordInput").value = "";
+    document.getElementById("passwordInput").focus();
+  }
+}
+
+function logoutAdmin() {
+  sessionStorage.removeItem(AUTH_KEY);
+  location.reload();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ADMIN VIEW
+═══════════════════════════════════════════════════════════════ */
+let adminStorageItems = [];
+let adminDeliveryItems = [];
+
+function initAdminView() {
+  document.getElementById("adminView").style.display = "block";
+  document.getElementById("proposalDate").value = new Date().toISOString().split("T")[0];
+  populateStorageDropdown("storageType", "storageQtyLabel");
+  populateDeliveryDropdown("deliveryType");
+  renderAdminStorage();
+  renderAdminDelivery();
+  renderAdminTotals();
+}
+
+function populateStorageDropdown(selectId, labelId) {
+  const select = document.getElementById(selectId);
+  select.innerHTML = `
+    <optgroup label="Rack Storage">
+      <option value="bay">Full Bay — 12 pallets ($460/mo)</option>
+      <option value="pallet">Standard Pallet ($45/mo)</option>
+      <option value="overstock">Overstock Pallet ($35/mo)</option>
+    </optgroup>
+    <optgroup label="Bulk Floor">
+      <option value="bulk_std">Standard Bulk ($10/sqft/mo)</option>
+      <option value="bulk_prem">Oversize/Irregular ($12/sqft/mo)</option>
+    </optgroup>
+    <optgroup label="Short-term (1wk min)">
+      <option value="st_pallet">Short-term Pallet ($35/pallet/wk)</option>
+      <option value="st_bulk">Short-term Bulk ($3.50/sqft/wk)</option>
+    </optgroup>`;
+  select.addEventListener("change", () => {
+    document.getElementById(labelId).textContent = STORAGE_RATES[select.value].qtyLabel;
+  });
+  document.getElementById(labelId).textContent = STORAGE_RATES[select.value].qtyLabel;
+}
+
+function populateDeliveryDropdown(selectId) {
+  const select = document.getElementById(selectId);
+  let html = '<optgroup label="Delivery Tiers">';
+  Object.entries(DELIVERY_RATES).filter(([k,v]) => v.type === "tier").forEach(([k,v]) => {
+    html += `<option value="${k}">${v.name} ($${v.price})</option>`;
+  });
+  html += '</optgroup><optgroup label="Add-Ons">';
+  Object.entries(DELIVERY_RATES).filter(([k,v]) => v.type === "addon").forEach(([k,v]) => {
+    html += `<option value="${k}">${v.name} ($${v.price})</option>`;
+  });
+  html += '</optgroup><optgroup label="Surcharges">';
+  Object.entries(DELIVERY_RATES).filter(([k,v]) => v.type === "surcharge").forEach(([k,v]) => {
+    const price = v.percent ? `+${v.percent}%` : `$${v.price}`;
+    html += `<option value="${k}">${v.name} (${price})</option>`;
+  });
+  html += '</optgroup>';
+  select.innerHTML = html;
+}
+
+function addStorageItem() {
+  const type = document.getElementById("storageType").value;
+  const qty = parseFloat(document.getElementById("storageQty").value);
+  if (!qty || qty <= 0) return showToast("Enter valid quantity", true);
+  adminStorageItems.push({ id: Date.now() + Math.random(), type, qty });
+  document.getElementById("storageQty").value = 1;
+  renderAdminStorage(); renderAdminTotals();
+}
+function removeAdminStorageItem(id) {
+  adminStorageItems = adminStorageItems.filter(i => i.id !== id);
+  renderAdminStorage(); renderAdminTotals();
+}
+function updateAdminStorageQty(id, qty) {
+  const q = parseFloat(qty);
+  if (!q || q <= 0) return;
+  const item = adminStorageItems.find(i => i.id === id);
+  if (item) { item.qty = q; renderAdminStorage(); renderAdminTotals(); }
+}
+
+function addDeliveryItem() {
+  const type = document.getElementById("deliveryType").value;
+  const qty = parseFloat(document.getElementById("deliveryQty").value);
+  if (!qty || qty <= 0) return showToast("Enter valid quantity", true);
+  adminDeliveryItems.push({ id: Date.now() + Math.random(), type, qty });
+  document.getElementById("deliveryQty").value = 1;
+  renderAdminDelivery(); renderAdminTotals();
+}
+function removeAdminDeliveryItem(id) {
+  adminDeliveryItems = adminDeliveryItems.filter(i => i.id !== id);
+  renderAdminDelivery(); renderAdminTotals();
+}
+function updateAdminDeliveryQty(id, qty) {
+  const q = parseFloat(qty);
+  if (!q || q <= 0) return;
+  const item = adminDeliveryItems.find(i => i.id === id);
+  if (item) { item.qty = q; renderAdminDelivery(); renderAdminTotals(); }
+}
+
+function renderAdminStorage() {
+  const list = document.getElementById("storageList");
+  if (adminStorageItems.length === 0) {
+    list.innerHTML = '<div class="empty-state">Optional — skip if no storage.</div>';
+    return;
+  }
+  list.innerHTML = adminStorageItems.map(it => {
+    const rate = STORAGE_RATES[it.type];
+    const line = it.qty * rate.price;
+    return `
+      <div class="item-row">
+        <div class="item-info">
+          <div class="name">${rate.name}</div>
+          <div class="meta">${fmt(rate.price)}/${rate.unitShort}</div>
+        </div>
+        <div class="item-qty"><input type="number" min="1" value="${it.qty}" onchange="updateAdminStorageQty(${it.id}, this.value)" /></div>
+        <div class="item-line">${fmt(line)}</div>
+        <button class="item-remove" onclick="removeAdminStorageItem(${it.id})">&times;</button>
+      </div>`;
+  }).join("");
+}
+
+function renderAdminDelivery() {
+  const list = document.getElementById("deliveryList");
+  if (adminDeliveryItems.length === 0) {
+    list.innerHTML = '<div class="empty-state">Optional — skip if no delivery.</div>';
+    return;
+  }
+  list.innerHTML = adminDeliveryItems.map(it => {
+    const rate = DELIVERY_RATES[it.type];
+    const line = calcDeliveryLine(it, adminDeliveryItems);
+    const display = rate.percent ? `+${rate.percent}%` : `${fmt(rate.price)}${rate.unit === "flat" ? " flat" : "/" + (rate.unit || "each")}`;
+    return `
+      <div class="item-row">
+        <div class="item-info">
+          <div class="name">${rate.name}</div>
+          <div class="meta">${display}</div>
+        </div>
+        <div class="item-qty"><input type="number" min="1" value="${it.qty}" onchange="updateAdminDeliveryQty(${it.id}, this.value)" /></div>
+        <div class="item-line">${fmt(line)}</div>
+        <button class="item-remove" onclick="removeAdminDeliveryItem(${it.id})">&times;</button>
+      </div>`;
+  }).join("");
+}
+
+function renderAdminTotals() {
+  const s = calcStorageTotals(adminStorageItems);
+  const d = calcDeliveryTotal(adminDeliveryItems);
+  document.getElementById("totStorageMonthly").textContent = fmt(s.monthly * 3);
+  document.getElementById("totStorageShort").textContent = fmt(s.shortTerm);
+  document.getElementById("totDelivery").textContent = fmt(d);
+  document.getElementById("totQuarterly").textContent = fmt((s.monthly * 3) + s.shortTerm + d);
+}
+
+function generateProposal() {
+  const client = document.getElementById("clientName").value.trim();
+  if (!client) return showToast("Client name required", true);
+
+  const data = {
+    c: client,
+    n: document.getElementById("clientContact").value.trim(),
+    e: document.getElementById("clientEmail").value.trim(),
+    d: document.getElementById("proposalDate").value,
+    i: document.getElementById("onboardingIntro").value.trim(),
+    s: adminStorageItems.map(it => ({ t: it.type, q: it.qty })),
+    v: adminDeliveryItems.map(it => ({ t: it.type, q: it.qty })),
+    o: document.getElementById("customNotes").value.trim()
+  };
+
+  const encoded = encodeProposal(data);
+  if (!encoded) return showToast("Encode failed", true);
+
+  const url = `${location.origin}${location.pathname}#p=${encoded}`;
+  document.getElementById("lbUrl").textContent = url;
+  document.getElementById("linkBanner").classList.add("show");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  showToast("Proposal link ready");
+}
+
+function copyLink() {
+  const url = document.getElementById("lbUrl").textContent;
+  navigator.clipboard.writeText(url).then(
+    () => showToast("Link copied"),
+    () => showToast("Copy failed — select and copy manually", true)
+  );
+}
+
+function openGmail() {
+  const url = document.getElementById("lbUrl").textContent;
+  const client = document.getElementById("clientName").value.trim();
+  const contact = document.getElementById("clientContact").value.trim();
+  const email = document.getElementById("clientEmail").value.trim();
+  const firstName = contact ? contact.split(" ")[0] : "";
+  const greeting = firstName ? `Hi ${firstName},` : "Hello,";
+
+  const body = `${greeting}\n\nThank you for considering HANDS Logistics. I've prepared a custom proposal for ${client}, ready to review here:\n\n${url}\n\nThis page shows exactly what working together would look like, with pricing tailored to your needs. You can review the details and adjust freely — then reach out to accept or request changes.\n\nHappy to walk through any of it on a call — just reply and we'll set a time.\n\nBest,\nJon\nFounder & CEO, HANDS Logistics\nLas Vegas, NV  |  concierge@handslogistics.com`;
+
+  const subject = `Your HANDS Logistics Proposal — ${client}`;
+  const gmailUrl = `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(email)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.open(gmailUrl, "_blank");
+}
+
+function resetForm() {
+  if (!confirm("Clear form?")) return;
+  ["clientName","clientContact","clientEmail","onboardingIntro","customNotes"].forEach(id => document.getElementById(id).value = "");
+  document.getElementById("proposalDate").value = new Date().toISOString().split("T")[0];
+  adminStorageItems = [];
+  adminDeliveryItems = [];
+  renderAdminStorage(); renderAdminDelivery(); renderAdminTotals();
+  document.getElementById("linkBanner").classList.remove("show");
+  showToast("Cleared");
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PROPOSAL VIEW (client-facing)
+═══════════════════════════════════════════════════════════════ */
+let proposalStorageItems = [];
+let proposalDeliveryItems = [];
+let proposalClient = "";
+
+function renderProposalView(data) {
+  proposalClient = data.c || "Valued Client";
+  document.getElementById("proposalView").style.display = "block";
+  document.getElementById("preparedName").textContent = proposalClient;
+  document.getElementById("heroEyebrow").textContent = `Prepared for ${proposalClient}`;
+
+  const defaultIntro = `Thank you for considering HANDS Logistics — we'd love to be the team behind ${proposalClient}'s operations here in Las Vegas. To give you a feel for what working together would actually look like, here's a preview of what your team would have access to from day one.`;
+  document.getElementById("onboardingIntroText").textContent = data.i || defaultIntro;
+
+  if (data.o) {
+    document.getElementById("notesCallout").style.display = "block";
+    document.getElementById("notesBody").textContent = data.o;
+  }
+
+  populateStorageDropdown("storageTypeP", "storageQtyLabelP");
+  populateDeliveryDropdown("deliveryTypeP");
+
+  proposalStorageItems = (data.s || []).map(it => ({
+    id: Date.now() + Math.random(), type: it.t, qty: it.q
+  }));
+  proposalDeliveryItems = (data.v || []).map(it => ({
+    id: Date.now() + Math.random(), type: it.t, qty: it.q
+  }));
+
+  renderProposalStorage();
+  renderProposalDelivery();
+  renderProposalTotals();
+
+  // Pre-fill accept/changes email links
+  const acceptSubject = `Accepting HANDS Proposal — ${proposalClient}`;
+  const acceptBody = `Hi Jon,\n\nWe'd like to move forward with the HANDS Logistics proposal for ${proposalClient}. Let's schedule a kickoff call at your earliest convenience.\n\nThanks,`;
+  document.getElementById("acceptMailto").href = `mailto:concierge@handslogistics.com?subject=${encodeURIComponent(acceptSubject)}&body=${encodeURIComponent(acceptBody)}`;
+
+  const changesSubject = `Proposal Changes — ${proposalClient}`;
+  const changesBody = `Hi Jon,\n\nWe've reviewed the proposal for ${proposalClient} and would like to discuss some adjustments:\n\n[describe changes]\n\nThanks,`;
+  document.getElementById("changesMailto").href = `mailto:concierge@handslogistics.com?subject=${encodeURIComponent(changesSubject)}&body=${encodeURIComponent(changesBody)}`;
+}
+
+function addStorageItemP() {
+  const type = document.getElementById("storageTypeP").value;
+  const qty = parseFloat(document.getElementById("storageQtyP").value);
+  if (!qty || qty <= 0) return showToast("Enter valid quantity", true);
+  proposalStorageItems.push({ id: Date.now() + Math.random(), type, qty });
+  document.getElementById("storageQtyP").value = 1;
+  renderProposalStorage(); renderProposalTotals();
+}
+function removeProposalStorageItem(id) {
+  proposalStorageItems = proposalStorageItems.filter(i => i.id !== id);
+  renderProposalStorage(); renderProposalTotals();
+}
+function updateProposalStorageQty(id, qty) {
+  const q = parseFloat(qty);
+  if (!q || q <= 0) return;
+  const item = proposalStorageItems.find(i => i.id === id);
+  if (item) { item.qty = q; renderProposalStorage(); renderProposalTotals(); }
+}
+function addDeliveryItemP() {
+  const type = document.getElementById("deliveryTypeP").value;
+  const qty = parseFloat(document.getElementById("deliveryQtyP").value);
+  if (!qty || qty <= 0) return showToast("Enter valid quantity", true);
+  proposalDeliveryItems.push({ id: Date.now() + Math.random(), type, qty });
+  document.getElementById("deliveryQtyP").value = 1;
+  renderProposalDelivery(); renderProposalTotals();
+}
+function removeProposalDeliveryItem(id) {
+  proposalDeliveryItems = proposalDeliveryItems.filter(i => i.id !== id);
+  renderProposalDelivery(); renderProposalTotals();
+}
+function updateProposalDeliveryQty(id, qty) {
+  const q = parseFloat(qty);
+  if (!q || q <= 0) return;
+  const item = proposalDeliveryItems.find(i => i.id === id);
+  if (item) { item.qty = q; renderProposalDelivery(); renderProposalTotals(); }
+}
+
+function renderProposalStorage() {
+  const list = document.getElementById("storageListP");
+  if (proposalStorageItems.length === 0) {
+    list.innerHTML = '<div class="empty-state">No storage in this proposal — add items if you need space.</div>';
+    return;
+  }
+  list.innerHTML = proposalStorageItems.map(it => {
+    const rate = STORAGE_RATES[it.type];
+    const line = it.qty * rate.price;
+    return `
+      <div class="item-row">
+        <div class="item-info">
+          <div class="name">${rate.name}</div>
+          <div class="meta">${fmt(rate.price)}/${rate.unitShort}${rate.isShortTerm ? " · 1wk min" : ""}</div>
+        </div>
+        <div class="item-qty"><input type="number" min="1" value="${it.qty}" onchange="updateProposalStorageQty(${it.id}, this.value)" /></div>
+        <div class="item-line">${fmt(line)}</div>
+        <button class="item-remove" onclick="removeProposalStorageItem(${it.id})">&times;</button>
+      </div>`;
+  }).join("");
+}
+
+function renderProposalDelivery() {
+  const list = document.getElementById("deliveryListP");
+  if (proposalDeliveryItems.length === 0) {
+    list.innerHTML = '<div class="empty-state">No delivery in this proposal — add services above.</div>';
+    return;
+  }
+  list.innerHTML = proposalDeliveryItems.map(it => {
+    const rate = DELIVERY_RATES[it.type];
+    const line = calcDeliveryLine(it, proposalDeliveryItems);
+    const display = rate.percent ? `+${rate.percent}% of tier total` : `${fmt(rate.price)}${rate.unit === "flat" ? "" : " / " + (rate.unit || "each")}`;
+    return `
+      <div class="item-row">
+        <div class="item-info">
+          <div class="name">${rate.name}</div>
+          <div class="meta">${display}</div>
+        </div>
+        <div class="item-qty"><input type="number" min="1" value="${it.qty}" onchange="updateProposalDeliveryQty(${it.id}, this.value)" /></div>
+        <div class="item-line">${fmt(line)}</div>
+        <button class="item-remove" onclick="removeProposalDeliveryItem(${it.id})">&times;</button>
+      </div>`;
+  }).join("");
+}
+
+function renderProposalTotals() {
+  const s = calcStorageTotals(proposalStorageItems);
+  const d = calcDeliveryTotal(proposalDeliveryItems);
+  document.getElementById("totStorageMonthlyP").textContent = fmt(s.monthly * 3);
+  document.getElementById("totStorageShortP").textContent = fmt(s.shortTerm);
+  document.getElementById("totDeliveryP").textContent = fmt(d);
+  document.getElementById("totQuarterlyP").textContent = fmt((s.monthly * 3) + s.shortTerm + d);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════════════════════ */
+let toastTimer;
+function showToast(msg, isError) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.toggle("error", !!isError);
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 3000);
+}
+</script>
 </body>
 </html>
