@@ -43,9 +43,9 @@ exports.handler = async (event) => {
 
   const { password, to, subject, body } = payload;
 
-  // Admin password required
-  const expected = process.env.ADMIN_PASSWORD;
-  if (!expected || password !== expected) {
+  // Admin password required (temporarily hardcoded — TODO: revert to env var)
+  const expected = "HANDS2026";
+  if (password !== expected) {
     return { statusCode: 401, headers, body: JSON.stringify({ error: "Unauthorized" }) };
   }
 
