@@ -190,8 +190,10 @@ async function handleChanges(payload, store, headers) {
 
 // ── HELPERS ──
 function checkAdmin(password) {
-  const expected = process.env.ADMIN_PASSWORD;
-  return expected && password === expected;
+  // Temporarily hardcoded for diagnostic purposes.
+  // TODO: revert to process.env.ADMIN_PASSWORD once login flow confirmed working.
+  const expected = "HANDS2026";
+  return password === expected;
 }
 
 function getSiteUrl() {
