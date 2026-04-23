@@ -194,6 +194,13 @@ function checkAdmin(password) {
   return expected && password === expected;
 }
 
+function getSiteUrl() {
+  // Netlify sets URL automatically to the production site URL,
+  // and DEPLOY_PRIME_URL for branch/preview deploys. Falls back
+  // to a sensible default if neither is set (local dev).
+  return process.env.URL || process.env.DEPLOY_PRIME_URL || "https://hqrates.netlify.app";
+}
+
 function makeSlug(client) {
   const base = (client || "proposal")
     .toLowerCase()
@@ -232,7 +239,7 @@ async function sendNotification({ subject, body }) {
 }
 
 function buildAcceptNotification(record) {
-  const url = `https://handslogistics.netlify.app/proposal/${record.slug}`;
+  const url = `${getSiteUrl()}/proposal/${record.slug}`;
   let body = `Good news — ${record.client} accepted their proposal.\n\n`;
   body += `Client:   ${record.client}\n`;
   body += `Contact:  ${record.contact || "(not provided)"}\n`;
@@ -245,7 +252,8 @@ function buildAcceptNotification(record) {
 }
 
 function buildChangeRequestNotification(record, notes) {
-  const url = `https://handslogistics.netlify.app/proposal/${record.slug}`;
+  const siteUrl = getSiteUrl();
+  const url = `${siteUrl}/proposal/${record.slug}`;
   let body = `${record.client} requested changes to their proposal.\n\n`;
   body += `Client:   ${record.client}\n`;
   body += `Contact:  ${record.contact || "(not provided)"}\n`;
@@ -256,7 +264,7 @@ function buildChangeRequestNotification(record, notes) {
   body += `${notes || "(no notes provided)"}\n`;
   body += `────────────────────────\n\n`;
   body += `View/edit:  ${url}\n`;
-  body += `Admin:      https://handslogistics.netlify.app/admin\n`;
+  body += `Admin:      ${siteUrl}/admin\n`;
   return body;
 }
 
