@@ -384,7 +384,143 @@
   }
   .notes-callout .nc-body { font-size: 14px; line-height: 1.6; color: var(--dark); white-space: pre-wrap; }
 
-  /* ── RATE CARD REFERENCE SECTION ── */
+  /* ── ADMIN PRICING CONTROLS ── */
+  .pricing-controls {
+    display: grid; grid-template-columns: 1fr 1fr auto; gap: 20px;
+    padding: 20px 24px; background: rgba(17,17,16,0.03);
+    border: 1px solid var(--light-grey); border-radius: 2px;
+    margin-bottom: 24px;
+    align-items: end;
+  }
+  .pricing-controls .field { margin-bottom: 0; }
+  .pricing-controls .pc-toggle {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px; background: var(--white);
+    border: 1px solid var(--light-grey); border-radius: 2px;
+    cursor: pointer;
+  }
+  .pricing-controls .pc-toggle input[type="checkbox"] {
+    width: 16px; height: 16px; cursor: pointer; accent-color: var(--green-dark);
+  }
+  .pricing-controls .pc-toggle label {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--dark);
+    cursor: pointer;
+  }
+  .pc-pct {
+    position: relative;
+  }
+  .pc-pct input {
+    padding-right: 28px !important;
+    text-align: right;
+    font-family: var(--font-mono); font-weight: 500;
+  }
+  .pc-pct::after {
+    content: '%'; position: absolute; right: 14px; top: 50%;
+    transform: translateY(-50%); color: var(--text-grey);
+    font-family: var(--font-mono); font-size: 12px;
+    pointer-events: none;
+  }
+
+  /* Admin row variant has 5 columns: info / qty / override / line / remove */
+  .item-row-admin {
+    grid-template-columns: 1fr auto auto auto auto !important;
+  }
+  .item-override {
+    min-width: 80px;
+  }
+  .item-override input {
+    width: 72px; text-align: right;
+    font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+    padding: 4px 8px; border: 1px solid var(--light-grey); border-radius: 2px;
+    color: var(--green-dark);
+  }
+  .item-override input:focus { border-color: var(--green-dark); outline: none; }
+  .item-override input::placeholder { color: var(--mid-grey); font-weight: 400; }
+
+  /* Margin indicator */
+  .margin-indicator {
+    display: flex; align-items: center; gap: 16px;
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin-top: 12px;
+    font-family: var(--font-mono);
+  }
+  .margin-indicator .mi-label {
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+  }
+  .margin-indicator .mi-pct {
+    font-family: var(--font-display); font-size: 28px; font-weight: 300;
+    line-height: 1;
+  }
+  .margin-indicator .mi-meta {
+    font-size: 10px; color: rgba(255,255,255,0.5);
+    margin-left: auto;
+    letter-spacing: 0.05em;
+  }
+  .margin-indicator.margin-good .mi-pct { color: var(--green); }
+  .margin-indicator.margin-warn .mi-pct { color: #d4a54f; }
+  .margin-indicator.margin-bad .mi-pct { color: var(--red); }
+  .margin-indicator.margin-empty .mi-pct { color: rgba(255,255,255,0.3); }
+
+  /* ── RETAINER SECTION (proposal view) ── */
+  .retainer-section {
+    padding: 80px 80px;
+    background: linear-gradient(180deg, var(--off-white) 0%, #eceae4 100%);
+    border-top: 1px solid var(--light-grey);
+  }
+  .retainer-section .rt-header { text-align: center; max-width: 680px; margin: 0 auto 48px; }
+  .volume-tiers {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
+    max-width: 1100px; margin: 0 auto 32px;
+    background: var(--light-grey);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  }
+  .volume-tier {
+    background: var(--white); padding: 32px 20px;
+    text-align: center;
+    border-bottom: 3px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .volume-tier:hover { border-bottom-color: var(--green-dark); }
+  .volume-tier .vt-range {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--text-grey);
+    margin-bottom: 10px;
+  }
+  .volume-tier .vt-disc {
+    font-family: var(--font-display); font-size: 34px; font-weight: 300;
+    color: var(--green-dark); line-height: 1;
+    margin-bottom: 6px;
+  }
+  .volume-tier .vt-eff {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--dark); margin-bottom: 10px;
+  }
+  .volume-tier .vt-eff strong { color: var(--green-dark); font-weight: 500; }
+  .volume-tier .vt-req {
+    font-size: 11px; color: var(--text-grey); line-height: 1.4;
+  }
+  .retainer-cta {
+    text-align: center; max-width: 640px; margin: 0 auto;
+    font-size: 14px; color: var(--text-grey); line-height: 1.7;
+  }
+  .retainer-cta strong { color: var(--dark); font-weight: 500; }
+
+  @media (max-width: 1024px) {
+    .pricing-controls { grid-template-columns: 1fr 1fr; }
+    .pricing-controls .pc-toggle { grid-column: 1 / -1; }
+    .volume-tiers { grid-template-columns: repeat(2, 1fr); }
+    .retainer-section { padding: 56px 40px; }
+    .item-row-admin { grid-template-columns: 1fr auto auto auto !important; }
+    .item-override { display: none; }
+  }
+  @media (max-width: 640px) {
+    .retainer-section { padding: 48px 24px; }
+    .volume-tiers { grid-template-columns: 1fr; }
+    .pricing-controls { grid-template-columns: 1fr; }
+  }
   .rates-reference { padding: 96px 80px; background: var(--white); }
   .rates-reference .rr-logo {
     height: 40px; width: auto; display: block;
@@ -728,6 +864,27 @@
       </div>
     </div>
 
+    <!-- PRICING CONTROLS — category multipliers + retainer toggle -->
+    <div class="card">
+      <div class="section-eyebrow">06 — Pricing Controls</div>
+      <h3 class="section-title" style="font-size: 22px;">Adjust rates for this proposal</h3>
+      <p class="section-sub">Use category multipliers to apply a blanket adjustment, or override individual line items above. Client never sees the published rate — they see what you set.</p>
+      <div class="pricing-controls">
+        <div class="field pc-pct">
+          <label for="storageMultiplierInput">Storage rate %</label>
+          <input id="storageMultiplierInput" type="number" min="0" step="1" value="100" onchange="updateStorageMultiplier(this.value)" title="100 = published rate · 90 = 10% discount · 110 = 10% markup" />
+        </div>
+        <div class="field pc-pct">
+          <label for="deliveryMultiplierInput">Delivery rate %</label>
+          <input id="deliveryMultiplierInput" type="number" min="0" step="1" value="100" onchange="updateDeliveryMultiplier(this.value)" title="100 = published rate · 90 = 10% discount · 110 = 10% markup" />
+        </div>
+        <div class="pc-toggle">
+          <input type="checkbox" id="retainerToggle" onchange="toggleRetainerSection(this.checked)" />
+          <label for="retainerToggle">Show retainer tiers to client</label>
+        </div>
+      </div>
+    </div>
+
     <div class="totals-card">
       <div class="totals-row">
         <span class="label">Storage (monthly × 3)</span>
@@ -744,6 +901,10 @@
       <div class="totals-row totals-grand">
         <span class="label">Quarterly Invoice</span>
         <span class="amt" id="totQuarterly">$0</span>
+      </div>
+      <div class="margin-indicator margin-empty" id="marginIndicator">
+        <span class="mi-label">Gross Margin</span>
+        <span class="mi-pct">—</span>
       </div>
     </div>
 
@@ -1013,7 +1174,7 @@
       <!-- DELIVERY RATES -->
       <div class="rate-block">
         <h3>Delivery</h3>
-        <div class="rb-sub">Per-Delivery · Las Vegas + Regional</div>
+        <div class="rb-sub">Per-Delivery · POD + BOL + COC Included</div>
 
         <div class="rate-group">
           <div class="rate-group-label">Tiers</div>
@@ -1026,10 +1187,8 @@
 
         <div class="rate-group">
           <div class="rate-group-label">Add-Ons</div>
-          <div class="rate-line"><span class="rl-name">Photo POD Documentation</span><span class="rl-price">$50</span></div>
           <div class="rate-line"><span class="rl-name">White Glove Setup</span><span class="rl-price">$175</span></div>
           <div class="rate-line"><span class="rl-name">Return / Reverse Logistics</span><span class="rl-price">$200</span></div>
-          <div class="rate-line"><span class="rl-name">Chain of Custody</span><span class="rl-price">$50</span></div>
         </div>
 
         <div class="rate-group">
@@ -1040,6 +1199,44 @@
           <div class="rate-line"><span class="rl-name">Excess Mileage (&gt;60mi)</span><span class="rl-price">$0.85 / mi</span></div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ─── RETAINER / VOLUME TIERS (admin toggle) ─── -->
+  <section class="retainer-section" id="retainerSection" style="display: none;">
+    <div class="rt-header">
+      <div class="section-eyebrow">Retainer Option</div>
+      <h2 class="section-title">Commit to volume, unlock <em>preferred rates</em>.</h2>
+      <p class="section-sub">For teams running consistent monthly logistics. Discounts scale with commitment.</p>
+    </div>
+    <div class="volume-tiers">
+      <div class="volume-tier">
+        <div class="vt-range">4–7 deliveries / mo</div>
+        <div class="vt-disc">5% off</div>
+        <div class="vt-eff">Effective Tier 1: <strong>$90</strong></div>
+        <div class="vt-req">Monthly pre-commit</div>
+      </div>
+      <div class="volume-tier">
+        <div class="vt-range">8–15 deliveries / mo</div>
+        <div class="vt-disc">10% off</div>
+        <div class="vt-eff">Effective Tier 1: <strong>$86</strong></div>
+        <div class="vt-req">Quarterly pre-commit</div>
+      </div>
+      <div class="volume-tier">
+        <div class="vt-range">16–25 deliveries / mo</div>
+        <div class="vt-disc">15% off</div>
+        <div class="vt-eff">Effective Tier 1: <strong>$81</strong></div>
+        <div class="vt-req">Semi-annual + custom SLA</div>
+      </div>
+      <div class="volume-tier">
+        <div class="vt-range">26+ deliveries / mo</div>
+        <div class="vt-disc">Custom</div>
+        <div class="vt-eff">Negotiated</div>
+        <div class="vt-req">Annual contract</div>
+      </div>
+    </div>
+    <div class="retainer-cta">
+      <strong>Interested in retainer pricing?</strong> Reach out to <a href="mailto:concierge@handslogistics.com" style="color: var(--green-dark); text-decoration: none;">concierge@handslogistics.com</a> and we'll build a custom retainer agreement that fits your volume and cadence.
     </div>
   </section>
 
@@ -1175,15 +1372,13 @@ const STORAGE_RATES = {
 };
 
 const DELIVERY_RATES = {
-  tier1:      { name: "Tier 1 — Local Single Stop",       price: 95,  type: "tier", unit: "delivery" },
-  tier2:      { name: "Tier 2 — Multi-Stop (2-3)",        price: 185, type: "tier", unit: "delivery" },
-  tier3:      { name: "Tier 3 — Extended Route",          price: 325, type: "tier", unit: "delivery" },
-  tier4:      { name: "Tier 4 — Regional (80-150mi)",     price: 495, type: "tier", unit: "delivery" },
-  tier5:      { name: "Tier 5 — Overnight",               price: 650, type: "tier", unit: "delivery" },
-  pod:        { name: "Photo POD Documentation",          price: 50,  type: "addon", unit: "delivery" },
+  tier1:      { name: "Tier 1 — Local Single Stop",       price: 95,  type: "tier", unit: "delivery", desc: "POD + BOL + COC included" },
+  tier2:      { name: "Tier 2 — Multi-Stop (2-3)",        price: 185, type: "tier", unit: "delivery", desc: "POD + BOL + COC included" },
+  tier3:      { name: "Tier 3 — Extended Route",          price: 325, type: "tier", unit: "delivery", desc: "POD + BOL + COC included" },
+  tier4:      { name: "Tier 4 — Regional (80-150mi)",     price: 495, type: "tier", unit: "delivery", desc: "POD + BOL + COC + GPS" },
+  tier5:      { name: "Tier 5 — Overnight",               price: 650, type: "tier", unit: "delivery", desc: "POD + BOL + overnight manifest" },
   whiteglove: { name: "White Glove Setup",                price: 175, type: "addon", unit: "delivery" },
   reverse:    { name: "Return / Reverse Logistics",       price: 200, type: "addon", unit: "delivery" },
-  coc:        { name: "Chain of Custody",                 price: 50,  type: "addon", unit: "flat" },
   rush:       { name: "Rush (<4hr notice)",               percent: 50, type: "surcharge", appliesTo: "tier" },
   afterhrs:   { name: "After-Hours (6pm-8am)",            percent: 35, type: "surcharge", appliesTo: "tier" },
   weekend:    { name: "Weekend / Holiday",                percent: 40, type: "surcharge", appliesTo: "tier" },
@@ -1194,6 +1389,28 @@ const DELIVERY_RATES = {
   mileage:    { name: "Excess Mileage (>60mi)",           price: 0.85, type: "surcharge", unit: "mile" }
 };
 
+// COGS model from Profit Model sheet — used for admin margin indicator
+const GP_TARGET = 0.38;  // Target gross margin: 38%
+const GP_WARN = 0.20;    // Below this: red warning
+const COGS = {
+  // Delivery: fixed ~$85/delivery (labor $45 + fuel $22 + vehicle $18)
+  deliveryPerJob: 85,
+  // Storage: rough estimate — tune based on real rent/util allocation
+  storagePerMonthPerBay: 80,    // full bay
+  storagePerMonthPerPallet: 8,  // standard/overstock pallet
+  storagePerMonthPerSqft: 2.5,  // bulk floor
+  shortTermPerPalletWeek: 5,    // short-term pallet
+  shortTermPerSqftWeek: 0.75    // short-term bulk
+};
+
+// Volume retainer tiers (admin toggle to show to client)
+const VOLUME_TIERS = [
+  { range: "4–7 deliveries / month",   discount: 5,  eff: 90,    req: "Monthly pre-commit" },
+  { range: "8–15 deliveries / month",  discount: 10, eff: 86,    req: "Quarterly pre-commit" },
+  { range: "16–25 deliveries / month", discount: 15, eff: 81,    req: "Semi-annual + custom SLA" },
+  { range: "26+ deliveries / month",   discount: null, eff: "Custom", req: "Annual contract" }
+];
+
 function fmt(n) {
   if (!n) return "$0";
   return "$" + Number(n).toLocaleString("en-US", {
@@ -1202,32 +1419,73 @@ function fmt(n) {
   });
 }
 
-function calcStorageTotals(items) {
+function calcStorageTotals(items, multiplier = 1) {
   let monthly = 0, shortTerm = 0;
   for (const it of items) {
     const rate = STORAGE_RATES[it.type];
     if (!rate) continue;
-    const line = it.qty * rate.price;
+    const effectivePrice = (it.override != null ? it.override : rate.price);
+    const line = it.qty * effectivePrice * multiplier;
     if (rate.isShortTerm) shortTerm += line;
     else monthly += line;
   }
   return { monthly, shortTerm };
 }
 
-function calcDeliveryLine(item, allItems) {
+function calcDeliveryLine(item, allItems, multiplier = 1) {
   const rate = DELIVERY_RATES[item.type];
   if (!rate) return 0;
   if (rate.type === "surcharge" && rate.percent) {
     const tierTotal = allItems
       .filter(i => DELIVERY_RATES[i.type] && DELIVERY_RATES[i.type].type === "tier")
-      .reduce((sum, i) => sum + (i.qty * DELIVERY_RATES[i.type].price), 0);
+      .reduce((sum, i) => {
+        const tierRate = DELIVERY_RATES[i.type];
+        const effPrice = i.override != null ? i.override : tierRate.price;
+        return sum + (i.qty * effPrice * multiplier);
+      }, 0);
     return tierTotal * (rate.percent / 100) * item.qty;
   }
-  return (rate.price || 0) * item.qty;
+  const effectivePrice = (item.override != null ? item.override : rate.price);
+  return effectivePrice * item.qty * multiplier;
 }
 
-function calcDeliveryTotal(items) {
-  return items.reduce((sum, it) => sum + calcDeliveryLine(it, items), 0);
+function calcDeliveryTotal(items, multiplier = 1) {
+  return items.reduce((sum, it) => sum + calcDeliveryLine(it, items, multiplier), 0);
+}
+
+// ── MARGIN CALCULATIONS ──
+// Returns { revenue, cogs, gp, gpPct } for the whole proposal
+function calcMargin(storageItems, deliveryItems, storageMultiplier, deliveryMultiplier) {
+  const s = calcStorageTotals(storageItems, storageMultiplier);
+  const d = calcDeliveryTotal(deliveryItems, deliveryMultiplier);
+  // Quarterly revenue: 3 months of monthly storage + short-term + delivery
+  const revenue = (s.monthly * 3) + s.shortTerm + d;
+
+  // COGS calculation
+  let cogs = 0;
+
+  // Storage COGS (monthly × 3 for quarter)
+  for (const it of storageItems) {
+    const rate = STORAGE_RATES[it.type];
+    if (!rate) continue;
+    if (it.type === "bay") cogs += it.qty * COGS.storagePerMonthPerBay * 3;
+    else if (it.type === "pallet" || it.type === "overstock") cogs += it.qty * COGS.storagePerMonthPerPallet * 3;
+    else if (it.type === "bulk_std" || it.type === "bulk_prem") cogs += it.qty * COGS.storagePerMonthPerSqft * 3;
+    else if (it.type === "st_pallet") cogs += it.qty * COGS.shortTermPerPalletWeek;
+    else if (it.type === "st_bulk") cogs += it.qty * COGS.shortTermPerSqftWeek;
+  }
+
+  // Delivery COGS: $85 per deliverable job (only count tier items, not surcharges/addons)
+  for (const it of deliveryItems) {
+    const rate = DELIVERY_RATES[it.type];
+    if (!rate) continue;
+    if (rate.type === "tier") cogs += it.qty * COGS.deliveryPerJob;
+    // Addons have minimal incremental COGS, surcharges are ~100% margin
+  }
+
+  const gp = revenue - cogs;
+  const gpPct = revenue > 0 ? gp / revenue : 0;
+  return { revenue, cogs, gp, gpPct };
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1333,6 +1591,9 @@ function logoutAdmin() {
 ═══════════════════════════════════════════════════════════════ */
 let adminStorageItems = [];
 let adminDeliveryItems = [];
+let storageMultiplier = 1.0;   // 1.0 = full price, 0.9 = 10% off, 1.1 = 10% up
+let deliveryMultiplier = 1.0;
+let showRetainerSection = false;
 
 function initAdminView() {
   document.getElementById("adminView").style.display = "block";
@@ -1404,6 +1665,19 @@ function updateAdminStorageQty(id, qty) {
   if (item) { item.qty = q; renderAdminStorage(); renderAdminTotals(); }
 }
 
+function updateAdminStorageOverride(id, val) {
+  const item = adminStorageItems.find(i => i.id === id);
+  if (!item) return;
+  const num = parseFloat(val);
+  if (!val || isNaN(num) || num < 0) {
+    delete item.override;
+  } else {
+    item.override = num;
+  }
+  renderAdminStorage();
+  renderAdminTotals();
+}
+
 function addDeliveryItem() {
   const type = document.getElementById("deliveryType").value;
   const qty = parseFloat(document.getElementById("deliveryQty").value);
@@ -1423,6 +1697,38 @@ function updateAdminDeliveryQty(id, qty) {
   if (item) { item.qty = q; renderAdminDelivery(); renderAdminTotals(); }
 }
 
+function updateAdminDeliveryOverride(id, val) {
+  const item = adminDeliveryItems.find(i => i.id === id);
+  if (!item) return;
+  const num = parseFloat(val);
+  if (!val || isNaN(num) || num < 0) {
+    delete item.override;
+  } else {
+    item.override = num;
+  }
+  renderAdminDelivery();
+  renderAdminTotals();
+}
+
+function updateStorageMultiplier(val) {
+  const n = parseFloat(val);
+  storageMultiplier = (isNaN(n) || n <= 0) ? 1.0 : (n / 100);
+  renderAdminStorage();
+  renderAdminTotals();
+}
+
+function updateDeliveryMultiplier(val) {
+  const n = parseFloat(val);
+  deliveryMultiplier = (isNaN(n) || n <= 0) ? 1.0 : (n / 100);
+  renderAdminDelivery();
+  renderAdminTotals();
+}
+
+function toggleRetainerSection(checked) {
+  showRetainerSection = checked;
+  // Retainer visibility is part of the proposal payload; nothing to re-render here.
+}
+
 function renderAdminStorage() {
   const list = document.getElementById("storageList");
   if (adminStorageItems.length === 0) {
@@ -1431,14 +1737,22 @@ function renderAdminStorage() {
   }
   list.innerHTML = adminStorageItems.map(it => {
     const rate = STORAGE_RATES[it.type];
-    const line = it.qty * rate.price;
+    const effectivePrice = it.override != null ? it.override : rate.price;
+    const line = it.qty * effectivePrice * storageMultiplier;
+    const isOverridden = it.override != null;
     return `
-      <div class="item-row">
+      <div class="item-row item-row-admin">
         <div class="item-info">
           <div class="name">${rate.name}</div>
-          <div class="meta">${fmt(rate.price)}/${rate.unitShort}</div>
+          <div class="meta">
+            <span>${fmt(rate.price)}/${rate.unitShort} published</span>
+            ${isOverridden ? '<span style="color: var(--green-dark); font-weight: 500;"> · override active</span>' : ''}
+          </div>
         </div>
-        <div class="item-qty"><input type="number" min="1" value="${it.qty}" onchange="updateAdminStorageQty(${it.id}, this.value)" /></div>
+        <div class="item-qty"><input type="number" min="1" value="${it.qty}" onchange="updateAdminStorageQty(${it.id}, this.value)" title="Quantity" /></div>
+        <div class="item-override">
+          <input type="number" step="0.01" min="0" value="${isOverridden ? it.override : ''}" placeholder="${rate.price}" onchange="updateAdminStorageOverride(${it.id}, this.value)" title="Override rate (leave blank for published)" />
+        </div>
         <div class="item-line">${fmt(line)}</div>
         <button class="item-remove" onclick="removeAdminStorageItem(${it.id})">&times;</button>
       </div>`;
@@ -1453,15 +1767,23 @@ function renderAdminDelivery() {
   }
   list.innerHTML = adminDeliveryItems.map(it => {
     const rate = DELIVERY_RATES[it.type];
-    const line = calcDeliveryLine(it, adminDeliveryItems);
-    const display = rate.percent ? `+${rate.percent}%` : `${fmt(rate.price)}${rate.unit === "flat" ? " flat" : "/" + (rate.unit || "each")}`;
+    const line = calcDeliveryLine(it, adminDeliveryItems, deliveryMultiplier);
+    const canOverride = rate.type === "tier" || rate.type === "addon" || (rate.type === "surcharge" && !rate.percent);
+    const isOverridden = it.override != null;
+    const displayPrice = rate.percent ? `+${rate.percent}%` : `${fmt(rate.price)}${rate.unit === "flat" ? " flat" : "/" + (rate.unit || "each")}`;
     return `
-      <div class="item-row">
+      <div class="item-row item-row-admin">
         <div class="item-info">
           <div class="name">${rate.name}</div>
-          <div class="meta">${display}</div>
+          <div class="meta">
+            <span>${displayPrice} published</span>
+            ${isOverridden ? '<span style="color: var(--green-dark); font-weight: 500;"> · override active</span>' : ''}
+          </div>
         </div>
-        <div class="item-qty"><input type="number" min="1" value="${it.qty}" onchange="updateAdminDeliveryQty(${it.id}, this.value)" /></div>
+        <div class="item-qty"><input type="number" min="1" value="${it.qty}" onchange="updateAdminDeliveryQty(${it.id}, this.value)" title="Quantity" /></div>
+        <div class="item-override">
+          ${canOverride ? `<input type="number" step="0.01" min="0" value="${isOverridden ? it.override : ''}" placeholder="${rate.price}" onchange="updateAdminDeliveryOverride(${it.id}, this.value)" title="Override rate" />` : '<span style="font-family: var(--font-mono); font-size: 10px; color: var(--text-grey);">—</span>'}
+        </div>
         <div class="item-line">${fmt(line)}</div>
         <button class="item-remove" onclick="removeAdminDeliveryItem(${it.id})">&times;</button>
       </div>`;
@@ -1469,12 +1791,37 @@ function renderAdminDelivery() {
 }
 
 function renderAdminTotals() {
-  const s = calcStorageTotals(adminStorageItems);
-  const d = calcDeliveryTotal(adminDeliveryItems);
-  document.getElementById("totStorageMonthly").textContent = fmt(s.monthly * 3);
+  const s = calcStorageTotals(adminStorageItems, storageMultiplier);
+  const d = calcDeliveryTotal(adminDeliveryItems, deliveryMultiplier);
+  const monthly3 = s.monthly * 3;
+  const quarterly = monthly3 + s.shortTerm + d;
+
+  document.getElementById("totStorageMonthly").textContent = fmt(monthly3);
   document.getElementById("totStorageShort").textContent = fmt(s.shortTerm);
   document.getElementById("totDelivery").textContent = fmt(d);
-  document.getElementById("totQuarterly").textContent = fmt((s.monthly * 3) + s.shortTerm + d);
+  document.getElementById("totQuarterly").textContent = fmt(quarterly);
+
+  // Margin indicator
+  const margin = calcMargin(adminStorageItems, adminDeliveryItems, storageMultiplier, deliveryMultiplier);
+  const gpEl = document.getElementById("marginIndicator");
+  if (gpEl) {
+    if (margin.revenue <= 0) {
+      gpEl.className = "margin-indicator margin-empty";
+      gpEl.innerHTML = `<span class="mi-label">Gross Margin</span><span class="mi-pct">—</span>`;
+      return;
+    }
+    const pct = margin.gpPct;
+    let state = "good";
+    if (pct < GP_WARN) state = "bad";
+    else if (pct < GP_TARGET) state = "warn";
+    gpEl.className = `margin-indicator margin-${state}`;
+    const pctStr = (pct * 100).toFixed(1) + "%";
+    const gpStr = fmt(margin.gp);
+    gpEl.innerHTML = `
+      <span class="mi-label">Gross Margin</span>
+      <span class="mi-pct">${pctStr}</span>
+      <span class="mi-meta">${gpStr} GP · target ${(GP_TARGET*100).toFixed(0)}%</span>`;
+  }
 }
 
 function generateProposal() {
@@ -1487,10 +1834,24 @@ function generateProposal() {
     e: document.getElementById("clientEmail").value.trim(),
     d: document.getElementById("proposalDate").value,
     i: document.getElementById("onboardingIntro").value.trim(),
-    s: adminStorageItems.map(it => ({ t: it.type, q: it.qty })),
-    v: adminDeliveryItems.map(it => ({ t: it.type, q: it.qty })),
-    o: document.getElementById("customNotes").value.trim()
+    s: adminStorageItems.map(it => {
+      const obj = { t: it.type, q: it.qty };
+      if (it.override != null) obj.r = it.override;  // r = override rate
+      return obj;
+    }),
+    v: adminDeliveryItems.map(it => {
+      const obj = { t: it.type, q: it.qty };
+      if (it.override != null) obj.r = it.override;
+      return obj;
+    }),
+    o: document.getElementById("customNotes").value.trim(),
+    sm: storageMultiplier !== 1 ? storageMultiplier : undefined,
+    dm: deliveryMultiplier !== 1 ? deliveryMultiplier : undefined,
+    rt: showRetainerSection ? 1 : undefined
   };
+
+  // Strip undefined keys to keep URL short
+  Object.keys(data).forEach(k => data[k] === undefined && delete data[k]);
 
   const encoded = encodeProposal(data);
   if (!encoded) return showToast("Encode failed", true);
@@ -1574,6 +1935,15 @@ function resetForm() {
   document.getElementById("proposalDate").value = new Date().toISOString().split("T")[0];
   adminStorageItems = [];
   adminDeliveryItems = [];
+  storageMultiplier = 1.0;
+  deliveryMultiplier = 1.0;
+  showRetainerSection = false;
+  const sm = document.getElementById("storageMultiplierInput");
+  const dm = document.getElementById("deliveryMultiplierInput");
+  const rt = document.getElementById("retainerToggle");
+  if (sm) sm.value = 100;
+  if (dm) dm.value = 100;
+  if (rt) rt.checked = false;
   renderAdminStorage(); renderAdminDelivery(); renderAdminTotals();
   document.getElementById("linkBanner").classList.remove("show");
   showToast("Cleared");
@@ -1585,6 +1955,8 @@ function resetForm() {
 let proposalStorageItems = [];
 let proposalDeliveryItems = [];
 let proposalClient = "";
+let proposalStorageMultiplier = 1.0;
+let proposalDeliveryMultiplier = 1.0;
 
 function renderProposalView(data) {
   proposalClient = data.c || "Valued Client";
@@ -1600,15 +1972,30 @@ function renderProposalView(data) {
     document.getElementById("notesBody").textContent = data.o;
   }
 
+  // Apply multipliers from URL (silent — client never sees the published rate reference)
+  proposalStorageMultiplier = typeof data.sm === "number" ? data.sm : 1.0;
+  proposalDeliveryMultiplier = typeof data.dm === "number" ? data.dm : 1.0;
+
   populateStorageDropdown("storageTypeP", "storageQtyLabelP");
   populateDeliveryDropdown("deliveryTypeP");
 
-  proposalStorageItems = (data.s || []).map(it => ({
-    id: Date.now() + Math.random(), type: it.t, qty: it.q
-  }));
-  proposalDeliveryItems = (data.v || []).map(it => ({
-    id: Date.now() + Math.random(), type: it.t, qty: it.q
-  }));
+  // Import items, preserving overrides (`r` in URL payload)
+  proposalStorageItems = (data.s || []).map(it => {
+    const obj = { id: Date.now() + Math.random(), type: it.t, qty: it.q };
+    if (it.r != null) obj.override = it.r;
+    return obj;
+  });
+  proposalDeliveryItems = (data.v || []).map(it => {
+    const obj = { id: Date.now() + Math.random(), type: it.t, qty: it.q };
+    if (it.r != null) obj.override = it.r;
+    return obj;
+  });
+
+  // Show or hide retainer section based on admin toggle
+  const retainerEl = document.getElementById("retainerSection");
+  if (retainerEl) {
+    retainerEl.style.display = data.rt === 1 ? "block" : "none";
+  }
 
   renderProposalStorage();
   renderProposalDelivery();
@@ -1669,12 +2056,13 @@ function renderProposalStorage() {
   }
   list.innerHTML = proposalStorageItems.map(it => {
     const rate = STORAGE_RATES[it.type];
-    const line = it.qty * rate.price;
+    const effectivePrice = (it.override != null ? it.override : rate.price) * proposalStorageMultiplier;
+    const line = it.qty * effectivePrice;
     return `
       <div class="item-row">
         <div class="item-info">
           <div class="name">${rate.name}</div>
-          <div class="meta">${fmt(rate.price)}/${rate.unitShort}${rate.isShortTerm ? " · 1wk min" : ""}</div>
+          <div class="meta">${fmt(effectivePrice)}/${rate.unitShort}${rate.isShortTerm ? " · 1wk min" : ""}</div>
         </div>
         <div class="item-qty"><input type="number" min="1" value="${it.qty}" onchange="updateProposalStorageQty(${it.id}, this.value)" /></div>
         <div class="item-line">${fmt(line)}</div>
@@ -1691,13 +2079,19 @@ function renderProposalDelivery() {
   }
   list.innerHTML = proposalDeliveryItems.map(it => {
     const rate = DELIVERY_RATES[it.type];
-    const line = calcDeliveryLine(it, proposalDeliveryItems);
-    const display = rate.percent ? `+${rate.percent}% of tier total` : `${fmt(rate.price)}${rate.unit === "flat" ? "" : " / " + (rate.unit || "each")}`;
+    const line = calcDeliveryLine(it, proposalDeliveryItems, proposalDeliveryMultiplier);
+    let displayMeta;
+    if (rate.percent) {
+      displayMeta = `+${rate.percent}% of tier total`;
+    } else {
+      const effPrice = (it.override != null ? it.override : rate.price) * proposalDeliveryMultiplier;
+      displayMeta = `${fmt(effPrice)}${rate.unit === "flat" ? "" : " / " + (rate.unit || "each")}`;
+    }
     return `
       <div class="item-row">
         <div class="item-info">
           <div class="name">${rate.name}</div>
-          <div class="meta">${display}</div>
+          <div class="meta">${displayMeta}</div>
         </div>
         <div class="item-qty"><input type="number" min="1" value="${it.qty}" onchange="updateProposalDeliveryQty(${it.id}, this.value)" /></div>
         <div class="item-line">${fmt(line)}</div>
@@ -1707,8 +2101,8 @@ function renderProposalDelivery() {
 }
 
 function renderProposalTotals() {
-  const s = calcStorageTotals(proposalStorageItems);
-  const d = calcDeliveryTotal(proposalDeliveryItems);
+  const s = calcStorageTotals(proposalStorageItems, proposalStorageMultiplier);
+  const d = calcDeliveryTotal(proposalDeliveryItems, proposalDeliveryMultiplier);
   document.getElementById("totStorageMonthlyP").textContent = fmt(s.monthly * 3);
   document.getElementById("totStorageShortP").textContent = fmt(s.shortTerm);
   document.getElementById("totDeliveryP").textContent = fmt(d);
